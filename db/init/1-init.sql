@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS todos (
     ID uuid DEFAULT uuid_generate_v4 (),
     title varchar(100) NOT NULL,
     description varchar(65535) NOT NULL,
-    status todo_status NOT NULL DEFAULT 'idle',
-    created_at timestamp NOT NULL DEFAULT NOW(),
-    updated_at timestamp NOT NULL DEFAULT NOW(),
+    status todo_status NOT NULL,
+    created_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL,
     PRIMARY KEY (ID)
 );

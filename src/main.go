@@ -14,18 +14,31 @@ import (
 	"gorm.io/gorm"
 )
 
+type TodoStauts string
+
+const (
+	Idle      TodoStauts = "idle"
+	Completed TodoStauts = "completed"
+)
+
 type Todo struct {
-	ID          uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key;" json:"id"`
-	Title       string    `gorm:"type:string" json:"title"`
-	Description string    `gorm:"type:string" json:"description"`
-	Status      string    `gorm:"type:string;" json:"status"`
-	CreatedAt   time.Time `json:"createAt"`
-	UpdatedAt   time.Time `json:"updateAt"`
+	ID          uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4();primary_key;" json:"id"`
+	Title       string     `gorm:"type:string" json:"title"`
+	Description string     `gorm:"type:string" json:"description"`
+	Status      TodoStauts `gorm:"type:enum('idle', 'completed');default:'idle'" json:"status"`
+	CreatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createAt"`
+	UpdatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updateAt"`
 }
 
 type AddTodo struct {
 	Title       string
 	Description string
+}
+
+type PatchTodo struct {
+	Title       string
+	Description string
+	Status      TodoStauts
 }
 
 var DB *gorm.DB
@@ -82,7 +95,7 @@ func AddTodos(c *gin.Context) {
 
 	todo := Todo{Title: payload.Title, Description: payload.Description}
 
-	createActionResult := DB.Select("ID", "Title", "Description").Create(&todo)
+	createActionResult := DB.Create(&todo)
 	createdDataResult := DB.First(&todo)
 
 	switch {
@@ -118,7 +131,49 @@ func GetTodoById(c *gin.Context) {
 	}
 }
 
+func PatchTodoById(c *gin.Context) {
+	var payload PatchTodo
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if (PatchTodo{} == payload) {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "No changed",
+		})
+		return
+	}
+
+	var todo Todo
+	id := c.Params.ByName("todoId")
+
+	if err := DB.Where("id = ?", id).First(&todo).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	result := DB.Model(&todo).Updates(Todo{
+		Title:       payload.Title,
+		Description: payload.Description,
+		Status:      payload.Status,
+	})
+
+	if result.Error == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": todo,
+		})
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"error": result.Error,
+		})
+	}
+}
+
 func main() {
+	os.Setenv("TZ", "0")
 	GetEnv()
 	LinkDb()
 	r := gin.Default()
@@ -126,6 +181,7 @@ func main() {
 	r.GET("/todos", GetTodos)
 	r.POST("/todos", AddTodos)
 	r.GET("/todos/:todoId", GetTodoById)
+	r.PATCH("/todos/:todoId", PatchTodoById)
 
 	r.Run()
 }
