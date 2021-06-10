@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -12,41 +13,62 @@ import (
 )
 
 type Todo struct {
-	ID          string `gorm:"primaryKey"`
+	Id          string `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
 }
 
-func getEnv() {
+var DB *gorm.DB
+
+func GetEnv() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 }
 
+func LinkDb() {
+	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB"), os.Getenv(("POSTGRES_PORT_HOST")))
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	DB = db
+
+}
+
+func Ping(c *gin.Context) {
+	c.Abort()
+}
+
+func GetTodos(c *gin.Context) {
+	var todos []Todo
+
+	result := DB.Find(&todos)
+
+	if result.Error == nil {
+
+		c.JSON(http.StatusOK, gin.H{
+			"data": todos,
+		})
+
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"error": result.Error,
+		})
+	}
+}
+
 func main() {
-	getEnv()
-
+	GetEnv()
+	LinkDb()
 	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=%s port=%s sslmode=disable", os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_DB"), os.Getenv(("POSTGRES_PORT_HOST")))
+	r.GET("/", Ping)
+	r.GET("/todos", GetTodos)
 
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-		if err == nil {
-			var todos []Todo
-
-			db.Find(&todos)
-
-			c.JSON(200, gin.H{
-				"data": todos,
-			})
-		} else {
-			c.JSON(200, gin.H{
-				"error": err.Error(),
-			})
-		}
-	})
 	r.Run()
 }
