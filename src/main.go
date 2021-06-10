@@ -101,6 +101,23 @@ func AddTodos(c *gin.Context) {
 	}
 }
 
+func GetTodoById(c *gin.Context) {
+	var todo Todo
+	id := c.Param("todoId")
+
+	result := DB.First(&todo, "id = ?", id)
+
+	if result.Error == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"data": todo,
+		})
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"error": result.Error,
+		})
+	}
+}
+
 func main() {
 	GetEnv()
 	LinkDb()
@@ -108,6 +125,7 @@ func main() {
 	r.GET("/", Ping)
 	r.GET("/todos", GetTodos)
 	r.POST("/todos", AddTodos)
+	r.GET("/todos/:todoId", GetTodoById)
 
 	r.Run()
 }
