@@ -1,7 +1,13 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 func Ping(c *gin.Context) {
-	c.Abort()
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Server working",
+	})
 }
