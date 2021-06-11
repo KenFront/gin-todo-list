@@ -172,6 +172,23 @@ func PatchTodoById(c *gin.Context) {
 	}
 }
 
+func DeleteTodoById(c *gin.Context) {
+	var todo Todo
+	id := c.Param("todoId")
+
+	result := DB.Delete(&todo, "id = ?", id)
+
+	if result.Error == nil {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Deleted successfully.",
+		})
+	} else {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"error": result.Error,
+		})
+	}
+}
+
 func main() {
 	os.Setenv("TZ", "0")
 	GetEnv()
@@ -182,6 +199,7 @@ func main() {
 	r.POST("/todos", AddTodos)
 	r.GET("/todos/:todoId", GetTodoById)
 	r.PATCH("/todos/:todoId", PatchTodoById)
+	r.DELETE("/todos/:todoId", DeleteTodoById)
 
 	r.Run()
 }
