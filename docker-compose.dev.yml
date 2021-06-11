@@ -14,11 +14,3 @@ services:
     volumes:
       - "${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d"
       - "${POSTGRES_PGDATA}:/var/lib/postgresql/data"
-  server:
-    container_name: GinServer
-    image: kenfront/gin-todolist
-    ports:
-      - "${SERVER_PORT}:${SERVER_PORT}"
-    restart: always
-    depends_on:
-        - db

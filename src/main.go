@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/gin-gonic/gin"
@@ -19,5 +22,5 @@ func main() {
 	r.PATCH("/todos/:todoId", controller.PatchTodoById)
 	r.DELETE("/todos/:todoId", controller.DeleteTodoById)
 
-	r.Run()
+	r.Run(fmt.Sprintf(":%s", os.Getenv("SERVER_PORT")))
 }
