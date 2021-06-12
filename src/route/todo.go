@@ -8,7 +8,7 @@ import (
 
 func UseTodos(r *gin.Engine) {
 	todos := r.Group("/todos")
-	todos.Use(middleware.AuthGuard())
+	middleware.UseAuthGuard(todos)
 	{
 		todos.GET("/", controller.GetTodos)
 		todos.POST("/", controller.AddTodo)

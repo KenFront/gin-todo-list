@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AuthGuard() gin.HandlerFunc {
+func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, err := util.CheckAuth(c)
 		if err != nil {
@@ -18,4 +18,8 @@ func AuthGuard() gin.HandlerFunc {
 		}
 		c.Next()
 	}
+}
+
+func UseAuthGuard(r *gin.RouterGroup) gin.IRoutes {
+	return r.Use(authGuard())
 }
