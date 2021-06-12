@@ -11,25 +11,22 @@ import (
 func PatchTodoById(c *gin.Context) {
 	var payload model.PatchTodo
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
 	if (model.PatchTodo{} == payload) {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": "No changed",
 		})
-		return
 	}
 
 	var todo model.Todo
 	id := c.Params.ByName("todoId")
 
 	if err := config.GetDB().Where("id = ?", id).First(&todo).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
-		return
 	}
 
 	result := config.GetDB().Model(&todo).Updates(model.Todo{
@@ -43,7 +40,7 @@ func PatchTodoById(c *gin.Context) {
 			"data": todo,
 		})
 	} else {
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": result.Error.Error(),
 		})
 	}

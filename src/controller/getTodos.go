@@ -18,7 +18,7 @@ func GetTodos(c *gin.Context) {
 			"data": todos,
 		})
 	} else {
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": result.Error.Error(),
 		})
 	}

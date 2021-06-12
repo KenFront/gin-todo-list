@@ -19,7 +19,7 @@ func DeleteTodoById(c *gin.Context) {
 			"message": "Deleted successfully.",
 		})
 	} else {
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": result.Error.Error(),
 		})
 	}

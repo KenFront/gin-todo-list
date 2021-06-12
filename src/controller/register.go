@@ -14,26 +14,23 @@ func Regiser(c *gin.Context) {
 	var payload model.AddUser
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
-		return
 	}
 
 	hashedPassword, err := util.HashPassword(payload.Password)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
-		return
 	}
 
 	id, err := uuid.NewUUID()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
-		return
 	}
 
 	user := model.User{
@@ -49,11 +46,11 @@ func Regiser(c *gin.Context) {
 
 	switch {
 	case createActionResult.Error != nil:
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": createActionResult.Error,
 		})
 	case createdDataResult.Error != nil:
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": createdDataResult.Error,
 		})
 	default:

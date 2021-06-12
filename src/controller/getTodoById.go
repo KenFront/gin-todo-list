@@ -19,7 +19,7 @@ func GetTodoById(c *gin.Context) {
 			"data": todo,
 		})
 	} else {
-		c.JSON(http.StatusServiceUnavailable, gin.H{
+		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
 			"error": result.Error.Error(),
 		})
 	}
