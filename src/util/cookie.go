@@ -2,8 +2,8 @@ package util
 
 import (
 	"errors"
-	"os"
 
+	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,10 +30,13 @@ func SetAuth(c *gin.Context, userId string) error {
 	if err != nil {
 		return err
 	}
-	c.SetCookie(authKey, token, GetAuthDuration(), "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+	env := config.GetEnv()
+	c.SetCookie(authKey, token, GetAuthDuration(), "/", env.DOMAIN, env.DOMAIN != "localhost", true)
 	return nil
 }
 
 func DeleteAuth(c *gin.Context) {
-	c.SetCookie(authKey, "DELETED", -1, "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+	env := config.GetEnv()
+
+	c.SetCookie(authKey, "DELETED", -1, "/", env.DOMAIN, env.DOMAIN != "localhost", true)
 }

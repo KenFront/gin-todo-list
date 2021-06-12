@@ -2,8 +2,8 @@ package util
 
 import (
 	"errors"
-	"os"
 
+	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -12,46 +12,27 @@ type authClaims struct {
 	jwt.StandardClaims
 }
 
-var issuer string
-var secret []byte
-
-func getSecret() []byte {
-	if secret == nil {
-		secret = []byte(os.Getenv("JWT_SECRET"))
-	}
-	return secret
-}
-
-func getIssuer() string {
-	if issuer == "" {
-		issuer = os.Getenv("JWT_ISSUER")
-	}
-	return issuer
-}
-
 func NewJwtToken(userId string) (string, error) {
-	secret := getSecret()
-	issuer := getIssuer()
+	env := config.GetEnv()
 	claims := authClaims{
 		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: GetAuthExpiresAt(),
-			Issuer:    issuer,
+			Issuer:    env.JWT_ISSUER,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(secret)
+	return token.SignedString(env.JWT_SECRET)
 }
 
 func ParseJwtToken(clientToken string) (*authClaims, error) {
-	secret := getSecret()
 
 	token, err := jwt.ParseWithClaims(
 		clientToken,
 		&authClaims{},
 		func(token *jwt.Token) (interface{}, error) {
-			return secret, nil
+			return config.GetEnv().JWT_SECRET, nil
 		},
 	)
 	if err != nil {

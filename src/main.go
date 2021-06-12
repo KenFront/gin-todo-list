@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/controller"
@@ -12,18 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func initialize() {
-	config.InitOs()
-	config.InitEnv()
-}
-
 func useGlobalMiddlewares(r *gin.Engine) {
 	middleware.UseLogger(r)
 	middleware.UseRecovery(r)
 }
 
 func main() {
-	initialize()
+	config.InitOs()
 
 	r := gin.New()
 
@@ -34,7 +28,7 @@ func main() {
 	route.UseAuth(r)
 	route.UseTodos(r)
 
-	if err := r.Run(fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))); err != nil {
+	if err := r.Run(fmt.Sprintf(":%s", config.GetEnv().SERVER_PORT)); err != nil {
 		log.Fatal("Unable to start:", err)
 	}
 }
