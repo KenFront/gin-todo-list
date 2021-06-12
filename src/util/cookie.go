@@ -25,8 +25,13 @@ func CheckAuth(c *gin.Context) (*authClaims, error) {
 	return parsed, nil
 }
 
-func SetAuth(c *gin.Context, userId string) {
-	c.SetCookie(authKey, NewJwtToken(userId), GetAuthDuration(), "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+func SetAuth(c *gin.Context, userId string) error {
+	token, err := NewJwtToken(userId)
+	if err != nil {
+		return err
+	}
+	c.SetCookie(authKey, token, GetAuthDuration(), "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+	return nil
 }
 
 func DeleteAuth(c *gin.Context) {

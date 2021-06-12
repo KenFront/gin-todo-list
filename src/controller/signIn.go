@@ -34,7 +34,13 @@ func SignIn(c *gin.Context) {
 	}
 
 	if util.CheckPasswordHash(payload.Password, user.Password) {
-		util.SetAuth(c, user.ID.String())
+		err := util.SetAuth(c, user.ID.String())
+		if err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Sign in successfully",
 		})

@@ -2,7 +2,6 @@ package util
 
 import (
 	"errors"
-	"log"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -18,7 +17,7 @@ var (
 	secret = []byte(os.Getenv("JWT_SECRET"))
 )
 
-func NewJwtToken(userId string) string {
+func NewJwtToken(userId string) (string, error) {
 	claims := authClaims{
 		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
@@ -27,13 +26,8 @@ func NewJwtToken(userId string) string {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString(secret)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return signedToken
+	return token.SignedString(secret)
 }
 
 func ParseJwtToken(clientToken string) (*authClaims, error) {
