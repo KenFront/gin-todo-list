@@ -31,6 +31,7 @@ func main() {
 
 	r.GET("/", controller.Ping)
 
+	route.UseAuth(r)
 	route.UseTodos(r)
 
 	if err := r.Run(fmt.Sprintf(":%s", os.Getenv("SERVER_PORT"))); err != nil {
