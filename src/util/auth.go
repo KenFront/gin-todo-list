@@ -2,28 +2,33 @@ package util
 
 import (
 	"errors"
-	"math"
 	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-var AuthKey = "auth"
-var hour = int(math.Pow(60, 2))
-var authDuration = 1 * hour
+var (
+	authKey = "auth"
+)
 
-func CheckAuth(c *gin.Context) (string, error) {
-	cookie, err := c.Cookie(AuthKey)
+func CheckAuth(c *gin.Context) (*authClaims, error) {
+	cookie, err := c.Cookie(authKey)
 	if err != nil {
-		return cookie, errors.New("not sign in yet")
+		return &authClaims{}, errors.New("not sign in yet")
 	}
-	return cookie, nil
+
+	parsed, err := ParseJwtToken(cookie)
+	if err != nil {
+		return parsed, err
+	}
+
+	return parsed, nil
 }
 
 func SetAuth(c *gin.Context) {
-	c.SetCookie(AuthKey, "temp", authDuration, "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+	c.SetCookie(authKey, NewJwtToken("temp"), GetAuthDuration(), "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
 }
 
 func DeleteAuth(c *gin.Context) {
-	c.SetCookie(AuthKey, "temp", -1, "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
+	c.SetCookie(authKey, "DELETED", -1, "/", os.Getenv("DOMAIN"), os.Getenv("DOMAIN") != "localhost", true)
 }
