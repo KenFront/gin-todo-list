@@ -10,10 +10,22 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       PGDATA: /var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT_HOST}:${POSTGRES_PORT}"
+      - "${POSTGRES_PORT_HOST}:${POSTGRES_PORT_HOST}"
     volumes:
-      - "${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d"
       - "${POSTGRES_PGDATA}:/var/lib/postgresql/data"
+  migrate:
+    container_name: MigratePostgresDB
+    image: migrate/migrate:v4.14.1
+    restart: on-failure
+    volumes:
+      - "${POSTGRES_MIGRATION_FILES_PATH}:/migrations"
+    command: >-
+      -source=file://migrations
+      -database=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=${POSTGRES_SSLMODE}
+      up
+      ${POSTGRES_VERSION}
+    depends_on:
+      - db
   server:
     container_name: GinServer
     image: kenfront/gin-todolist
@@ -21,4 +33,4 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always
     depends_on:
-        - db
+      - db
