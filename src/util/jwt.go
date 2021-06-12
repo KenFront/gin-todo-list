@@ -12,12 +12,26 @@ type authClaims struct {
 	jwt.StandardClaims
 }
 
-var (
-	issuer = os.Getenv("JWT_ISSUER")
-	secret = []byte(os.Getenv("JWT_SECRET"))
-)
+var issuer string
+var secret []byte
+
+func getSecret() []byte {
+	if secret == nil {
+		secret = []byte(os.Getenv("JWT_SECRET"))
+	}
+	return secret
+}
+
+func getIssuer() string {
+	if issuer == "" {
+		issuer = os.Getenv("JWT_ISSUER")
+	}
+	return issuer
+}
 
 func NewJwtToken(userId string) (string, error) {
+	secret := getSecret()
+	issuer := getIssuer()
 	claims := authClaims{
 		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
@@ -31,6 +45,8 @@ func NewJwtToken(userId string) (string, error) {
 }
 
 func ParseJwtToken(clientToken string) (*authClaims, error) {
+	secret := getSecret()
+
 	token, err := jwt.ParseWithClaims(
 		clientToken,
 		&authClaims{},
