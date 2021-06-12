@@ -44,7 +44,7 @@ func PatchTodoById(c *gin.Context) {
 		})
 	} else {
 		c.JSON(http.StatusServiceUnavailable, gin.H{
-			"error": result.Error,
+			"error": result.Error.Error(),
 		})
 	}
 }

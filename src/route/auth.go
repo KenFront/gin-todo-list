@@ -8,4 +8,5 @@ import (
 func UseAuth(r *gin.Engine) {
 	r.POST("/signin", controller.SignIn)
 	r.POST("/signout", controller.SignOut)
+	r.POST("/register", controller.Regiser)
 }

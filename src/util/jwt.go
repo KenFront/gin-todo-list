@@ -47,12 +47,15 @@ func ParseJwtToken(clientToken string) (*authClaims, error) {
 	if err != nil {
 		return &authClaims{}, err
 	}
+
 	claims, ok := token.Claims.(*authClaims)
 	if !ok {
 		return &authClaims{}, errors.New("couldn't parse")
 	}
+
 	if claims.ExpiresAt < GetAuthNow() {
 		return &authClaims{}, errors.New("JWT is expired")
 	}
+
 	return claims, nil
 }

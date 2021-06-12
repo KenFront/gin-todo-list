@@ -9,12 +9,12 @@ import (
 type TodoStauts string
 
 const (
-	Idle      TodoStauts = "idle"
-	Completed TodoStauts = "completed"
+	TodoIdle      TodoStauts = "idle"
+	TodoCompleted TodoStauts = "completed"
 )
 
 type Todo struct {
-	ID          uuid.UUID  `gorm:"type:uuid;default:uuid_generate_v4();primary_key;" json:"id"`
+	ID          uuid.UUID  `gorm:"type:uuid;primary_key;" json:"id"`
 	Title       string     `gorm:"type:string" json:"title"`
 	Description string     `gorm:"type:string" json:"description"`
 	Status      TodoStauts `gorm:"type:enum('idle', 'completed');default:'idle'" json:"status"`

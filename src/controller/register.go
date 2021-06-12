@@ -5,14 +5,23 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-func AddTodo(c *gin.Context) {
-	var payload model.AddTodo
+func Regiser(c *gin.Context) {
+	var payload model.AddUser
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	hashedPassword, err := util.HashPassword(payload.Password)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
@@ -27,10 +36,16 @@ func AddTodo(c *gin.Context) {
 		return
 	}
 
-	todo := model.Todo{ID: id, Title: payload.Title, Description: payload.Description}
+	user := model.User{
+		ID:       id,
+		Name:     payload.Name,
+		Account:  payload.Account,
+		Password: hashedPassword,
+		Email:    payload.Email,
+	}
 
-	createActionResult := config.GetDB().Create(&todo)
-	createdDataResult := config.GetDB().First(&todo, "id = ?", id)
+	createActionResult := config.GetDB().Create(&user)
+	createdDataResult := config.GetDB().First(&user, "id = ?", id)
 
 	switch {
 	case createActionResult.Error != nil:
@@ -42,8 +57,9 @@ func AddTodo(c *gin.Context) {
 			"error": createdDataResult.Error,
 		})
 	default:
+		user.Password = "******"
 		c.JSON(http.StatusOK, gin.H{
-			"data": todo,
+			"data": user,
 		})
 	}
 }
