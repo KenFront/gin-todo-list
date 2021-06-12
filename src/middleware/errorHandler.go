@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func cutomRecovery() gin.HandlerFunc {
+func errorHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
 			r := recover()
@@ -25,6 +25,6 @@ func cutomRecovery() gin.HandlerFunc {
 	}
 }
 
-func UseRecovery(r *gin.Engine) gin.IRoutes {
-	return r.Use(cutomRecovery())
+func UseErrorHandler(r *gin.Engine) gin.IRoutes {
+	return r.Use(errorHandler())
 }

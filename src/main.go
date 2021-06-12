@@ -13,7 +13,7 @@ import (
 
 func useGlobalMiddlewares(r *gin.Engine) {
 	middleware.UseLogger(r)
-	middleware.UseRecovery(r)
+	middleware.UseErrorHandler(r)
 }
 
 func main() {
