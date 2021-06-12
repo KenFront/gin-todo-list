@@ -14,22 +14,25 @@ func Regiser(c *gin.Context) {
 	var payload model.AddUser
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
 	hashedPassword, err := util.HashPassword(payload.Password)
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
 	id, err := uuid.NewUUID()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
@@ -46,12 +49,14 @@ func Regiser(c *gin.Context) {
 
 	switch {
 	case createActionResult.Error != nil:
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": createActionResult.Error,
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  createActionResult.Error.Error(),
 		})
 	case createdDataResult.Error != nil:
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": createdDataResult.Error,
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  createdDataResult.Error.Error(),
 		})
 	default:
 		user.Password = "******"

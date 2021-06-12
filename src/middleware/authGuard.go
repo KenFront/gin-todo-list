@@ -15,15 +15,17 @@ func authGuard() gin.HandlerFunc {
 		claim, err := util.CheckAuth(c)
 		if err != nil {
 			util.DeleteAuth(c)
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
+			panic(&util.ApiError{
+				StatusCode: http.StatusUnauthorized,
+				ErrorType:  err.Error(),
 			})
 		}
 
 		id, err := uuid.Parse(claim.UserId)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
+			panic(&util.ApiError{
+				StatusCode: http.StatusUnauthorized,
+				ErrorType:  err.Error(),
 			})
 		}
 
@@ -34,8 +36,9 @@ func authGuard() gin.HandlerFunc {
 		result := config.GetDB().First(&user, "id = ?", id)
 
 		if result.Error != nil {
-			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-				"error": result.Error.Error(),
+			panic(&util.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  result.Error.Error(),
 			})
 		}
 		c.Next()

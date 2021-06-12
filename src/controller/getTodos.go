@@ -5,6 +5,7 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,8 +19,9 @@ func GetTodos(c *gin.Context) {
 			"data": todos,
 		})
 	} else {
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": result.Error.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  result.Error.Error(),
 		})
 	}
 }

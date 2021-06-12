@@ -13,8 +13,9 @@ func SignIn(c *gin.Context) {
 	var payload model.SignIn
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
@@ -26,25 +27,27 @@ func SignIn(c *gin.Context) {
 	result := config.GetDB().First(&user, "account = ?", payload.Account)
 
 	if result.Error != nil {
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": result.Error.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  result.Error.Error(),
 		})
 	}
 
 	if util.CheckPasswordHash(payload.Password, user.Password) {
 		err := util.SetAuth(c, user.ID.String())
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-				"error": err.Error(),
+			panic(&util.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  err.Error(),
 			})
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Sign in successfully",
 		})
 	} else {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Sign in fail",
+		panic(&util.ApiError{
+			StatusCode: http.StatusUnauthorized,
+			ErrorType:  "Sign in fail",
 		})
 	}
-
 }

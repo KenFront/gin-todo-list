@@ -5,18 +5,23 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 )
 
 func PatchTodoById(c *gin.Context) {
 	var payload model.PatchTodo
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
+		})
 	}
 
 	if (model.PatchTodo{} == payload) {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "No changed",
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  "No changed",
 		})
 	}
 
@@ -24,8 +29,9 @@ func PatchTodoById(c *gin.Context) {
 	id := c.Params.ByName("todoId")
 
 	if err := config.GetDB().Where("id = ?", id).First(&todo).Error; err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
@@ -40,8 +46,9 @@ func PatchTodoById(c *gin.Context) {
 			"data": todo,
 		})
 	} else {
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": result.Error.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  result.Error.Error(),
 		})
 	}
 }

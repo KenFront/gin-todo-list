@@ -5,6 +5,7 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -13,15 +14,17 @@ func AddTodo(c *gin.Context) {
 	var payload model.AddTodo
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
 	id, err := uuid.NewUUID()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
+		panic(&util.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  err.Error(),
 		})
 	}
 
@@ -32,12 +35,14 @@ func AddTodo(c *gin.Context) {
 
 	switch {
 	case createActionResult.Error != nil:
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": createActionResult.Error,
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  createActionResult.Error.Error(),
 		})
 	case createdDataResult.Error != nil:
-		c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
-			"error": createdDataResult.Error,
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  createdDataResult.Error.Error(),
 		})
 	default:
 		c.JSON(http.StatusOK, gin.H{
