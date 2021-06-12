@@ -5,8 +5,8 @@ setEnv:
 build:
 	docker build -t kenfront/gin-todolist:latest .
 upDB:
-	docker compose -f ./docker-compose.dev.yml up 
+	docker compose up db
 upAll:
-	docker compose -f ./docker-compose.yml up
+	docker compose up
 down:
 	docker compose down
