@@ -27,8 +27,9 @@ func PatchTodoById(c *gin.Context) {
 
 	var todo model.Todo
 	id := c.Params.ByName("todoId")
+	userId := util.GetUserId(c)
 
-	if err := config.GetDB().Where("id = ?", id).First(&todo).Error; err != nil {
+	if err := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
 		panic(&util.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),

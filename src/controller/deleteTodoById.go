@@ -12,8 +12,8 @@ import (
 func DeleteTodoById(c *gin.Context) {
 	var todo model.Todo
 	id := c.Param("todoId")
-
-	result := config.GetDB().Delete(&todo, "id = ?", id)
+	userId := util.GetUserId(c)
+	result := config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId)
 
 	if result.Error == nil {
 		c.JSON(http.StatusOK, gin.H{

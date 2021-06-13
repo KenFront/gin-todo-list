@@ -11,8 +11,9 @@ import (
 
 func GetTodos(c *gin.Context) {
 	var todos []model.Todo
+	userId := util.GetUserId(c)
 
-	result := config.GetDB().Find(&todos)
+	result := config.GetDB().Find(&todos, "user_id = ?", userId)
 
 	if result.Error == nil {
 		c.JSON(http.StatusOK, gin.H{

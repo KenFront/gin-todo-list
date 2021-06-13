@@ -12,7 +12,6 @@ import (
 
 func AddTodo(c *gin.Context) {
 	var payload model.AddTodo
-
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		panic(&util.ApiError{
 			StatusCode: http.StatusBadRequest,
@@ -28,7 +27,12 @@ func AddTodo(c *gin.Context) {
 		})
 	}
 
-	todo := model.Todo{ID: id, Title: payload.Title, Description: payload.Description}
+	todo := model.Todo{
+		ID:          id,
+		Title:       payload.Title,
+		Description: payload.Description,
+		UserId:      util.GetUserId(c),
+	}
 
 	createActionResult := config.GetDB().Create(&todo)
 	createdDataResult := config.GetDB().First(&todo, "id = ?", id)

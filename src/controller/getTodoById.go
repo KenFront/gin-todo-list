@@ -12,8 +12,9 @@ import (
 func GetTodoById(c *gin.Context) {
 	var todo model.Todo
 	id := c.Param("todoId")
+	userId := util.GetUserId(c)
 
-	result := config.GetDB().First(&todo, "id = ?", id)
+	result := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId)
 
 	if result.Error == nil {
 		c.JSON(http.StatusOK, gin.H{
