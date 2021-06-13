@@ -12,14 +12,14 @@ import (
 func PatchTodoById(c *gin.Context) {
 	var payload model.PatchTodo
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),
 		})
 	}
 
 	if (model.PatchTodo{} == payload) {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  "No changed",
 		})
@@ -30,7 +30,7 @@ func PatchTodoById(c *gin.Context) {
 	userId := util.GetUserId(c)
 
 	if err := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),
 		})
@@ -43,12 +43,13 @@ func PatchTodoById(c *gin.Context) {
 	})
 
 	if result.Error != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  result.Error.Error(),
 		})
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data": todo,
+	util.ApiSuccess(c, &model.ApiSuccess{
+		StatusCode: http.StatusOK,
+		Data:       todo,
 	})
 }

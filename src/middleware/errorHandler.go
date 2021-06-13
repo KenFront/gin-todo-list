@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 
+	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 )
@@ -10,8 +11,8 @@ import (
 func catchError(c *gin.Context) {
 	r := recover()
 	switch {
-	case util.IsSameType(r, &util.ApiError{}):
-		err := r.(*util.ApiError)
+	case util.IsSameType(r, &model.ApiError{}):
+		err := r.(*model.ApiError)
 		c.AbortWithStatusJSON(err.StatusCode, gin.H{
 			"error": err.ErrorType,
 		})

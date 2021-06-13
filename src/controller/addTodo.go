@@ -13,7 +13,7 @@ import (
 func AddTodo(c *gin.Context) {
 	var payload model.AddTodo
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),
 		})
@@ -21,7 +21,7 @@ func AddTodo(c *gin.Context) {
 
 	id, err := uuid.NewUUID()
 	if err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),
 		})
@@ -39,18 +39,19 @@ func AddTodo(c *gin.Context) {
 
 	switch {
 	case createActionResult.Error != nil:
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  createActionResult.Error.Error(),
 		})
 	case createdDataResult.Error != nil:
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  createdDataResult.Error.Error(),
 		})
 	default:
-		c.JSON(http.StatusOK, gin.H{
-			"data": todo,
+		util.ApiSuccess(c, &model.ApiSuccess{
+			StatusCode: http.StatusOK,
+			Data:       todo,
 		})
 	}
 }

@@ -20,7 +20,7 @@ func authGuard() gin.HandlerFunc {
 		result := config.GetDB().First(&user, "id = ?", id)
 
 		if result.Error != nil {
-			panic(&util.ApiError{
+			panic(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  result.Error.Error(),
 			})

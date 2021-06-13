@@ -13,7 +13,7 @@ func SignIn(c *gin.Context) {
 	var payload model.SignIn
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  err.Error(),
 		})
@@ -27,14 +27,14 @@ func SignIn(c *gin.Context) {
 	result := config.GetDB().First(&user, "account = ?", payload.Account)
 
 	if result.Error != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  result.Error.Error(),
 		})
 	}
 
 	if !util.CheckPasswordHash(payload.Password, user.Password) {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  "Sign in fail",
 		})
@@ -42,13 +42,13 @@ func SignIn(c *gin.Context) {
 
 	err := util.SetAuth(c, user.ID.String())
 	if err != nil {
-		panic(&util.ApiError{
+		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  err.Error(),
 		})
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Sign in successfully",
+	util.ApiSuccess(c, &model.ApiSuccess{
+		StatusCode: http.StatusOK,
+		Data:       "Sign in successfully",
 	})
 }
