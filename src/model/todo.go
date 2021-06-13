@@ -24,12 +24,12 @@ type Todo struct {
 }
 
 type AddTodo struct {
-	Title       string
-	Description string
+	Title       string `binding:"min=1,max=100" json:"title"`
+	Description string `binding:"min=1,max=65535" json:"description"`
 }
 
 type PatchTodo struct {
-	Title       string
-	Description string
-	Status      TodoStauts
+	Title       string     `binding:"omitempty,max=100" json:"title"`
+	Description string     `binding:"omitempty,max=65535" json:"description"`
+	Status      TodoStauts `binding:"omitempty,oneof=idle completed" json:"status"`
 }

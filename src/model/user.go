@@ -26,13 +26,12 @@ type User struct {
 }
 
 type AddUser struct {
-	Name     string
-	Account  string
-	Password string
-	Email    string
+	Name  string `binding:"min=3,max=100" json:"name"`
+	Email string `binding:"email,min=5,max=255" json:"email"`
+	SignIn
 }
 
 type SignIn struct {
-	Account  string
-	Password string
+	Account  string `binding:"min=3,max=100" json:"account"`
+	Password string `binding:"min=3,max=100" json:"password"`
 }
