@@ -33,21 +33,22 @@ func SignIn(c *gin.Context) {
 		})
 	}
 
-	if util.CheckPasswordHash(payload.Password, user.Password) {
-		err := util.SetAuth(c, user.ID.String())
-		if err != nil {
-			panic(&util.ApiError{
-				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  err.Error(),
-			})
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Sign in successfully",
-		})
-	} else {
+	if !util.CheckPasswordHash(payload.Password, user.Password) {
 		panic(&util.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  "Sign in fail",
 		})
 	}
+
+	err := util.SetAuth(c, user.ID.String())
+	if err != nil {
+		panic(&util.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  err.Error(),
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Sign in successfully",
+	})
 }

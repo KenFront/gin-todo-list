@@ -15,14 +15,13 @@ func GetTodos(c *gin.Context) {
 
 	result := config.GetDB().Find(&todos, "user_id = ?", userId)
 
-	if result.Error == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"data": todos,
-		})
-	} else {
+	if result.Error != nil {
 		panic(&util.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  result.Error.Error(),
 		})
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": todos,
+	})
 }

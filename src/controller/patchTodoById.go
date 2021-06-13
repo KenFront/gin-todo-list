@@ -42,14 +42,13 @@ func PatchTodoById(c *gin.Context) {
 		Status:      payload.Status,
 	})
 
-	if result.Error == nil {
-		c.JSON(http.StatusOK, gin.H{
-			"data": todo,
-		})
-	} else {
+	if result.Error != nil {
 		panic(&util.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  result.Error.Error(),
 		})
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": todo,
+	})
 }
