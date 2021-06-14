@@ -59,7 +59,6 @@ func Regiser(c *gin.Context) {
 			ErrorType:  createdDataResult.Error.Error(),
 		})
 	default:
-		user.Password = "******"
 		util.ApiSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
 			Data:       user,
