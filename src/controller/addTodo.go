@@ -3,55 +3,62 @@ package controller
 import (
 	"net/http"
 
-	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-func AddTodo(c *gin.Context) {
-	var payload model.AddTodo
-	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
-		})
-	}
+type AddTodoProps struct {
+	Db        *gorm.DB
+	GetUserId func(c *gin.Context) uuid.UUID
+}
 
-	id, err := uuid.NewUUID()
-	if err != nil {
-		panic(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
-		})
-	}
+func AddTodo(p AddTodoProps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var payload model.AddTodo
+		if err := c.ShouldBindJSON(&payload); err != nil {
+			panic(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  err.Error(),
+			})
+		}
 
-	todo := model.Todo{
-		ID:          id,
-		Title:       payload.Title,
-		Description: payload.Description,
-		UserId:      util.GetUserId(c),
-	}
+		id, err := uuid.NewUUID()
+		if err != nil {
+			panic(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  err.Error(),
+			})
+		}
 
-	createActionResult := config.GetDB().Create(&todo)
-	createdDataResult := config.GetDB().First(&todo, "id = ?", id)
+		todo := model.Todo{
+			ID:          id,
+			Title:       payload.Title,
+			Description: payload.Description,
+			UserId:      p.GetUserId(c),
+		}
 
-	switch {
-	case createActionResult.Error != nil:
-		panic(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  createActionResult.Error.Error(),
-		})
-	case createdDataResult.Error != nil:
-		panic(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  createdDataResult.Error.Error(),
-		})
-	default:
-		util.ApiSuccess(c, &model.ApiSuccess{
-			StatusCode: http.StatusOK,
-			Data:       todo,
-		})
+		createActionResult := p.Db.Create(&todo)
+		createdDataResult := p.Db.First(&todo, "id = ?", id)
+
+		switch {
+		case createActionResult.Error != nil:
+			panic(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  createActionResult.Error.Error(),
+			})
+		case createdDataResult.Error != nil:
+			panic(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  createdDataResult.Error.Error(),
+			})
+		default:
+			util.ApiSuccess(c, &model.ApiSuccess{
+				StatusCode: http.StatusOK,
+				Data:       todo,
+			})
+		}
 	}
 }
