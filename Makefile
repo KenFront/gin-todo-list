@@ -1,3 +1,5 @@
+TEST_COMMAND=go test -v ./src/controller/...
+
 start:
 	POSTGRES_HOST=localhost go run ./src/main.go
 setEnv:
@@ -11,4 +13,6 @@ upAll:
 down:
 	docker compose down
 test:
-	go test -v ./src/...
+	$(TEST_COMMAND)
+testAll:
+	go clean -testcache && $(TEST_COMMAND)
