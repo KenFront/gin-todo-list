@@ -7,15 +7,9 @@ import (
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
-type AddTodoProps struct {
-	Db        *gorm.DB
-	GetUserId func(c *gin.Context) uuid.UUID
-}
-
-func AddTodo(p AddTodoProps) gin.HandlerFunc {
+func AddTodo(p model.AddTodoProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload model.AddTodo
 		if err := c.ShouldBindJSON(&payload); err != nil {

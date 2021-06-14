@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/KenFront/gin-todo-list/src/mock"
+	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -24,7 +25,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 
 	gormDB := mock.GetMockDb(t)
 
-	AddTodo(AddTodoProps{
+	AddTodo(model.AddTodoProps{
 		Db:        gormDB,
 		GetUserId: mock.GetUtilGetUserId,
 	})(c)
