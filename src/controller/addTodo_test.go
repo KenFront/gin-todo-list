@@ -23,8 +23,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 		}),
 	}
 
-	gormDB := mock.GetMockDb(t)
-
+	gormDB := mock.GetMockGorm(t)
 	AddTodo(model.AddTodoProps{
 		Db:        gormDB,
 		GetUserId: mock.GetUtilGetUserId,

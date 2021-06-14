@@ -3,29 +3,20 @@ package mock
 import (
 	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"gorm.io/driver/postgres"
+	"github.com/KenFront/gin-todo-list/src/model"
+
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
-func GetMockDb(t *testing.T) *gorm.DB {
-	sqlDB, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer sqlDB.Close()
-
-	mock.ExpectBegin()
-	mock.ExpectExec("INSERT INTO product_viewers").WithArgs(2, 3).WillReturnResult(sqlmock.NewResult(1, 1))
-	mock.ExpectCommit()
-
-	gormDB, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: sqlDB,
-	}), &gorm.Config{})
+func GetMockGorm(t *testing.T) *gorm.DB {
+	gormDB, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 
 	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+		t.Fatalf("gorm error: %s", err)
 	}
+	gormDB.AutoMigrate(&model.Todo{})
+	gormDB.AutoMigrate(&model.User{})
 
 	return gormDB
 }

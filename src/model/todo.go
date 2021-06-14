@@ -17,7 +17,7 @@ type Todo struct {
 	ID          uuid.UUID  `gorm:"type:uuid;primary_key;" json:"id"`
 	Title       string     `gorm:"type:string;size:100" json:"title"`
 	Description string     `gorm:"type:string;size:65535" json:"description"`
-	Status      TodoStauts `gorm:"type:enum('idle', 'completed');default:'idle'" json:"status"`
+	Status      TodoStauts `gorm:"default:'idle';" sql:"type:ENUM('idle', 'completed');" json:"status"`
 	CreatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createAt"`
 	UpdatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updateAt"`
 	UserId      uuid.UUID  `gorm:"type:uuid;foreignKey;" json:"userId"`

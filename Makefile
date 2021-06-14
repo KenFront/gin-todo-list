@@ -15,4 +15,4 @@ down:
 test:
 	$(TEST_COMMAND)
 testAll:
-	go clean -testcache && $(TEST_COMMAND)
+	go clean -testcache && GIN_MODE=release $(TEST_COMMAND)
