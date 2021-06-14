@@ -10,3 +10,5 @@ upAll:
 	docker compose up
 down:
 	docker compose down
+test:
+	go test -v ./src/...

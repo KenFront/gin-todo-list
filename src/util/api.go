@@ -9,5 +9,4 @@ func ApiSuccess(c *gin.Context, res *model.ApiSuccess) {
 	c.JSON(res.StatusCode, gin.H{
 		"data": res.Data,
 	})
-
 }
