@@ -16,3 +16,5 @@ test:
 	$(TEST_COMMAND)
 testAll:
 	go clean -testcache && GIN_MODE=release $(TEST_COMMAND)
+lint:
+	golangci-lint run ./src/...

@@ -15,8 +15,14 @@ func GetMockGorm(t *testing.T) *gorm.DB {
 	if err != nil {
 		t.Fatalf("gorm error: %s", err)
 	}
-	gormDB.AutoMigrate(&model.Todo{})
-	gormDB.AutoMigrate(&model.User{})
+
+	if err := gormDB.AutoMigrate(&model.Todo{}); err != nil {
+		t.Fatalf("migreate todo error: %s", err)
+	}
+
+	if err := gormDB.AutoMigrate(&model.User{}); err != nil {
+		t.Fatalf("migreate user error: %s", err)
+	}
 
 	return gormDB
 }

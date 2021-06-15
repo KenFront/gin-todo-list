@@ -2,33 +2,37 @@ name: Go
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-
-  build:
+  lint-test-build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.16.x
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16.x
 
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-    - name: Build
-      run: CGO_ENABLED=0 GOOS=linux go build -o ./app ./src/main.go
+      - name: Lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.40.1
 
-    - name: Test
-      run: make testAll
+      - name: Test
+        run: make testAll
+
+      - name: Build
+        run: CGO_ENABLED=0 GOOS=linux go build -o ./app ./src/main.go
