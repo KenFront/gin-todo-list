@@ -9,7 +9,7 @@ import (
 )
 
 func Ping(c *gin.Context) {
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Server is working",
 	})

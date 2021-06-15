@@ -13,9 +13,10 @@ func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := util.GetUserId(c)
 		if err != nil {
-			panic(&model.ApiError{
+			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+				Error:      err,
 			})
 		}
 
@@ -24,9 +25,10 @@ func authGuard() gin.HandlerFunc {
 		}
 
 		if config.GetDB().First(&user, "id = ?", id).Error != nil {
-			panic(&model.ApiError{
+			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
 			})
 		}
 		c.Next()

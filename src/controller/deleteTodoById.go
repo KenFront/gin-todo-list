@@ -15,20 +15,22 @@ func DeleteTodoById(c *gin.Context) {
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			Error:      err,
 		})
 	}
 
-	if config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId).Error != nil {
-		panic(&model.ApiError{
+	if err := config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_DELETE_TODO_FAILED,
+			Error:      err,
 		})
 	}
 
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Deleted successfully.",
 	})

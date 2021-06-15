@@ -5,8 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ApiSuccess(c *gin.Context, res *model.ApiSuccess) {
+func ApiOnSuccess(c *gin.Context, res *model.ApiSuccess) {
 	c.JSON(res.StatusCode, gin.H{
 		"data": res.Data,
 	})
+}
+
+func ApiOnError(res *model.ApiError) {
+	panic(res)
 }

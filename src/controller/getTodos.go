@@ -14,20 +14,22 @@ func GetTodos(c *gin.Context) {
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			Error:      err,
 		})
 	}
 
-	if config.GetDB().Find(&todos, "user_id = ?", userId).Error != nil {
-		panic(&model.ApiError{
+	if err := config.GetDB().Find(&todos, "user_id = ?", userId).Error; err != nil {
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_GET_TODOS_FAILED,
+			Error:      err,
 		})
 	}
 
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       todos,
 	})

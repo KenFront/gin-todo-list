@@ -10,7 +10,7 @@ import (
 
 func SignOut(c *gin.Context) {
 	util.DeleteAuth(c)
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Sign out successfully",
 	})

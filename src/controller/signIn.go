@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/config"
@@ -13,9 +14,10 @@ func SignIn(c *gin.Context) {
 	var payload model.SignIn
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_SIGN_IN_PAYLOAD_IS_INVALID,
+			Error:      err,
 		})
 	}
 
@@ -24,29 +26,32 @@ func SignIn(c *gin.Context) {
 		Password: payload.Password,
 	}
 
-	if config.GetDB().First(&user, "account = ?", payload.Account).Error != nil {
-		panic(&model.ApiError{
+	if err := config.GetDB().First(&user, "account = ?", payload.Account).Error; err != nil {
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
+			Error:      err,
 		})
 	}
 
 	if !util.CheckPasswordHash(payload.Password, user.Password) {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
+			Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
 		})
 	}
 
 	err := util.SetAuth(c, user.ID.String())
 	if err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
+			Error:      err,
 		})
 	}
 
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Sign in successfully",
 	})

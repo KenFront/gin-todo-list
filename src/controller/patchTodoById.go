@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/config"
@@ -12,16 +13,18 @@ import (
 func PatchTodoById(c *gin.Context) {
 	var payload model.PatchTodo
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_PATCH_TODO_PAYLOAD_IS_INVALID,
+			Error:      err,
 		})
 	}
 
 	if (model.PatchTodo{} == payload) {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD,
+			Error:      errors.New(string(model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD)),
 		})
 	}
 
@@ -30,30 +33,33 @@ func PatchTodoById(c *gin.Context) {
 
 	userId, err := util.GetUserId(c)
 	if err != nil {
-		panic(&model.ApiError{
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			Error:      err,
 		})
 	}
 
-	if config.GetDB().Model(&todo).Updates(model.Todo{
+	if err := config.GetDB().Model(&todo).Updates(model.Todo{
 		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      payload.Status,
-	}).Error != nil {
-		panic(&model.ApiError{
+	}).Error; err != nil {
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_PATCH_TODO_FAILED,
+			Error:      err,
 		})
 	}
 
-	if config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error != nil {
-		panic(&model.ApiError{
+	if err := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_GET_PATCHED_TODO_FAILED,
+			Error:      err,
 		})
 	}
-	util.ApiSuccess(c, &model.ApiSuccess{
+	util.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       todo,
 	})
