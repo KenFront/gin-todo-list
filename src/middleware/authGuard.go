@@ -17,12 +17,10 @@ func authGuard() gin.HandlerFunc {
 			ID: id,
 		}
 
-		result := config.GetDB().First(&user, "id = ?", id)
-
-		if result.Error != nil {
+		if config.GetDB().First(&user, "id = ?", id).Error != nil {
 			panic(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  result.Error.Error(),
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			})
 		}
 		c.Next()

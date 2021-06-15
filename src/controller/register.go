@@ -16,7 +16,7 @@ func Regiser(c *gin.Context) {
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_CREATE_USER_PAYLOAD_IS_INVALID,
 		})
 	}
 
@@ -24,7 +24,7 @@ func Regiser(c *gin.Context) {
 	if err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_HASH_PASSWORD_FAILD,
 		})
 	}
 
@@ -32,7 +32,7 @@ func Regiser(c *gin.Context) {
 	if err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_GENERATE_ID_FAILED,
 		})
 	}
 
@@ -44,24 +44,21 @@ func Regiser(c *gin.Context) {
 		Email:    payload.Email,
 	}
 
-	createActionResult := config.GetDB().Create(&user)
-	createdDataResult := config.GetDB().First(&user, "id = ?", id)
-
-	switch {
-	case createActionResult.Error != nil:
+	if config.GetDB().Create(&user).Error != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  createActionResult.Error.Error(),
-		})
-	case createdDataResult.Error != nil:
-		panic(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  createdDataResult.Error.Error(),
-		})
-	default:
-		util.ApiSuccess(c, &model.ApiSuccess{
-			StatusCode: http.StatusOK,
-			Data:       user,
+			ErrorType:  model.ERROR_GET_CREATED_USER_FAILED,
 		})
 	}
+	if config.GetDB().First(&user, "id = ?", id).Error != nil {
+		panic(&model.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  model.ERROR_CREATE_USER_FAILED,
+		})
+	}
+
+	util.ApiSuccess(c, &model.ApiSuccess{
+		StatusCode: http.StatusOK,
+		Data:       user,
+	})
 }

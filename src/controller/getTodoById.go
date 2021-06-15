@@ -14,14 +14,13 @@ func GetTodoById(c *gin.Context) {
 	id := c.Param("todoId")
 	userId := util.GetUserId(c)
 
-	result := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId)
-
-	if result.Error != nil {
+	if config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  result.Error.Error(),
+			ErrorType:  model.ERROR_GET_TODO_BY_ID_FAILED,
 		})
 	}
+
 	util.ApiSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       todo,

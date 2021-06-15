@@ -9,8 +9,8 @@ import (
 type TodoStauts string
 
 const (
-	TodoIdle      TodoStauts = "idle"
-	TodoCompleted TodoStauts = "completed"
+	TODO_IDLE      TodoStauts = "idle"
+	TODO_COMPLETED TodoStauts = "completed"
 )
 
 type Todo struct {

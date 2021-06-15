@@ -2,7 +2,7 @@ package model
 
 type ApiError struct {
 	StatusCode int
-	ErrorType  string
+	ErrorType  ErrorType
 }
 
 type ApiSuccess struct {

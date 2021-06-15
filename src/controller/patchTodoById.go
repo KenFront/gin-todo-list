@@ -14,14 +14,14 @@ func PatchTodoById(c *gin.Context) {
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_PATCH_TODO_PAYLOAD_IS_INVALID,
 		})
 	}
 
 	if (model.PatchTodo{} == payload) {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  "No changed",
+			ErrorType:  model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD,
 		})
 	}
 
@@ -29,23 +29,21 @@ func PatchTodoById(c *gin.Context) {
 	id := c.Params.ByName("todoId")
 	userId := util.GetUserId(c)
 
-	if err := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
-		panic(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
-		})
-	}
-
-	result := config.GetDB().Model(&todo).Updates(model.Todo{
+	if config.GetDB().Model(&todo).Updates(model.Todo{
 		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      payload.Status,
-	})
-
-	if result.Error != nil {
+	}).Error != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  result.Error.Error(),
+			ErrorType:  model.ERROR_PATCH_TODO_FAILED,
+		})
+	}
+
+	if config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error != nil {
+		panic(&model.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  model.ERROR_GET_PATCHED_TODO_FAILED,
 		})
 	}
 	util.ApiSuccess(c, &model.ApiSuccess{

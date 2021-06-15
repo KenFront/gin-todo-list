@@ -13,14 +13,14 @@ func DeleteTodoById(c *gin.Context) {
 	var todo model.Todo
 	id := c.Param("todoId")
 	userId := util.GetUserId(c)
-	result := config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId)
 
-	if result.Error == nil {
+	if config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId).Error != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  result.Error.Error(),
+			ErrorType:  model.ERROR_DELETE_TODO_FAILED,
 		})
 	}
+
 	util.ApiSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Deleted successfully.",

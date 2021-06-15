@@ -9,9 +9,9 @@ import (
 type UserStauts string
 
 const (
-	UserActive    UserStauts = "active"
-	UserInactive  UserStauts = "inactive"
-	UserForbidden UserStauts = "forbidden"
+	USER_ACTIVE    UserStauts = "active"
+	USER_INACTIVE  UserStauts = "inactive"
+	USER_FORBIDDEN UserStauts = "forbidden"
 )
 
 type User struct {

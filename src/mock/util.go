@@ -12,8 +12,8 @@ func GetUtilGetUserId(c *gin.Context) uuid.UUID {
 	id, err := uuid.NewUUID()
 	if err != nil {
 		panic(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  model.ERROR_GENERATE_ID_FAILED,
 		})
 	}
 	return id

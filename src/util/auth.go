@@ -12,9 +12,10 @@ func GetUserId(c *gin.Context) uuid.UUID {
 	claim, err := CheckAuth(c)
 	if err != nil {
 		DeleteAuth(c)
+
 		panic(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ErrorType(err.Error()),
 		})
 	}
 
@@ -22,7 +23,7 @@ func GetUserId(c *gin.Context) uuid.UUID {
 	if err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ErrorType(err.Error()),
 		})
 	}
 	return id

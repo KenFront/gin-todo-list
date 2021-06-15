@@ -12,18 +12,18 @@ import (
 func AddTodo(p model.AddTodoProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload model.AddTodo
-		if err := c.ShouldBindJSON(&payload); err != nil {
+		if c.ShouldBindJSON(&payload) != nil {
 			panic(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
-				ErrorType:  err.Error(),
+				ErrorType:  model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID,
 			})
 		}
 
 		id, err := uuid.NewUUID()
 		if err != nil {
 			panic(&model.ApiError{
-				StatusCode: http.StatusBadRequest,
-				ErrorType:  err.Error(),
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  model.ERROR_GENERATE_ID_FAILED,
 			})
 		}
 
@@ -34,25 +34,23 @@ func AddTodo(p model.AddTodoProps) gin.HandlerFunc {
 			UserId:      p.GetUserId(c),
 		}
 
-		createActionResult := p.Db.Create(&todo)
-		createdDataResult := p.Db.First(&todo, "id = ?", id)
-
-		switch {
-		case createActionResult.Error != nil:
+		if err := p.Db.Create(&todo).Error; err != nil {
 			panic(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  createActionResult.Error.Error(),
-			})
-		case createdDataResult.Error != nil:
-			panic(&model.ApiError{
-				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  createdDataResult.Error.Error(),
-			})
-		default:
-			util.ApiSuccess(c, &model.ApiSuccess{
-				StatusCode: http.StatusOK,
-				Data:       todo,
+				ErrorType:  model.ERROR_CREATE_TODO_FAILED,
 			})
 		}
+
+		if err := p.Db.First(&todo, "id = ?", id).Error; err != nil {
+			panic(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  model.ERROR_GET_CREATED_TODO_FAILED,
+			})
+		}
+
+		util.ApiSuccess(c, &model.ApiSuccess{
+			StatusCode: http.StatusOK,
+			Data:       todo,
+		})
 	}
 }

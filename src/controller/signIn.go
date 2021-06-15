@@ -15,7 +15,7 @@ func SignIn(c *gin.Context) {
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_SIGN_IN_PAYLOAD_IS_INVALID,
 		})
 	}
 
@@ -24,19 +24,17 @@ func SignIn(c *gin.Context) {
 		Password: payload.Password,
 	}
 
-	result := config.GetDB().First(&user, "account = ?", payload.Account)
-
-	if result.Error != nil {
+	if config.GetDB().First(&user, "account = ?", payload.Account).Error != nil {
 		panic(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  result.Error.Error(),
+			StatusCode: http.StatusUnauthorized,
+			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 		})
 	}
 
 	if !util.CheckPasswordHash(payload.Password, user.Password) {
 		panic(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
-			ErrorType:  "Sign in fail",
+			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 		})
 	}
 
@@ -44,9 +42,10 @@ func SignIn(c *gin.Context) {
 	if err != nil {
 		panic(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  err.Error(),
+			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 		})
 	}
+
 	util.ApiSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Sign in successfully",
