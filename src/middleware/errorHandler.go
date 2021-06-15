@@ -1,7 +1,9 @@
 package middleware
 
 import (
+	"errors"
 	"net/http"
+	"reflect"
 
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
@@ -10,14 +12,24 @@ import (
 
 func catchError(c *gin.Context) {
 	r := recover()
+
 	switch {
 	case util.IsSameType(r, &model.ApiError{}):
 		err := r.(*model.ApiError)
+		if e := c.Error(err.Error); e != nil {
+			panic(e)
+		}
 		c.AbortWithStatusJSON(err.StatusCode, gin.H{
 			"error": err.ErrorType,
 		})
-	case r != nil:
-		c.AbortWithStatus(http.StatusInternalServerError)
+	case r != nil && reflect.TypeOf(r) == reflect.TypeOf(errors.New("")):
+		err := r.(error)
+		if e := c.Error(err); e != nil {
+			panic(e)
+		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": model.ERROR_UNKNOWN,
+		})
 	}
 }
 

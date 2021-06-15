@@ -23,4 +23,5 @@ const (
 	ERROR_GET_TODO_BY_ID_FAILED          ErrorType = "ERROR_GET_TODO_BY_ID_FAILED"
 	ERROR_GET_TODOS_FAILED               ErrorType = "ERROR_GET_TODOS_FAILED"
 	ERROR_HASH_PASSWORD_FAILD            ErrorType = "ERROR_HASH_PASSWORD_FAILD"
+	ERROR_UNKNOWN                        ErrorType = "ERROR_UNKNOWN"
 )
