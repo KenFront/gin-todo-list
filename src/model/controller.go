@@ -8,5 +8,5 @@ import (
 
 type AddTodoProps struct {
 	Db        *gorm.DB
-	GetUserId func(c *gin.Context) uuid.UUID
+	GetUserId func(c *gin.Context) (uuid.UUID, error)
 }

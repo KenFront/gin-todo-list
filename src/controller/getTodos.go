@@ -11,7 +11,14 @@ import (
 
 func GetTodos(c *gin.Context) {
 	var todos []model.Todo
-	userId := util.GetUserId(c)
+
+	userId, err := util.GetUserId(c)
+	if err != nil {
+		panic(&model.ApiError{
+			StatusCode: http.StatusBadRequest,
+			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+		})
+	}
 
 	if config.GetDB().Find(&todos, "user_id = ?", userId).Error != nil {
 		panic(&model.ApiError{

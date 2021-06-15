@@ -1,10 +1,7 @@
 package util
 
 import (
-	"errors"
-
 	"github.com/KenFront/gin-todo-list/src/config"
-	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,15 +9,15 @@ var (
 	authKey = "auth"
 )
 
-func CheckAuth(c *gin.Context) (*authClaims, error) {
+func GetToken(c *gin.Context) (*authClaims, error) {
 	cookie, err := c.Cookie(authKey)
 	if err != nil {
-		return &authClaims{}, errors.New(string(model.ERROR_NOT_SIGN_IN_YET))
+		return &authClaims{}, err
 	}
 
 	parsed, err := ParseJwtToken(cookie)
 	if err != nil {
-		return parsed, errors.New(string(model.ERROR_USER_TOKEN_IS_EXPIRED_FAILED))
+		return parsed, err
 	}
 
 	return parsed, nil

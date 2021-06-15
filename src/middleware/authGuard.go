@@ -11,7 +11,13 @@ import (
 
 func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id := util.GetUserId(c)
+		id, err := util.GetUserId(c)
+		if err != nil {
+			panic(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			})
+		}
 
 		user := model.User{
 			ID: id,

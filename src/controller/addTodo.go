@@ -27,11 +27,19 @@ func AddTodo(p model.AddTodoProps) gin.HandlerFunc {
 			})
 		}
 
+		userId, err := p.GetUserId(c)
+		if err != nil {
+			panic(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			})
+		}
+
 		todo := model.Todo{
 			ID:          id,
 			Title:       payload.Title,
 			Description: payload.Description,
-			UserId:      p.GetUserId(c),
+			UserId:      userId,
 		}
 
 		if err := p.Db.Create(&todo).Error; err != nil {

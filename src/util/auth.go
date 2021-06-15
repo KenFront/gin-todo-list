@@ -1,30 +1,23 @@
 package util
 
 import (
-	"net/http"
+	"errors"
 
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-func GetUserId(c *gin.Context) uuid.UUID {
-	claim, err := CheckAuth(c)
-	if err != nil {
-		DeleteAuth(c)
+func GetUserId(c *gin.Context) (uuid.UUID, error) {
+	claim, err := GetToken(c)
 
-		panic(&model.ApiError{
-			StatusCode: http.StatusUnauthorized,
-			ErrorType:  model.ErrorType(err.Error()),
-		})
+	if err != nil {
+		return uuid.Nil, errors.New(string(model.ERROR_NOT_SIGN_IN_YET))
 	}
 
 	id, err := uuid.Parse(claim.UserId)
 	if err != nil {
-		panic(&model.ApiError{
-			StatusCode: http.StatusUnauthorized,
-			ErrorType:  model.ErrorType(err.Error()),
-		})
+		return uuid.Nil, errors.New(string(model.ERROR_USER_TOKEN_IS_EXPIRED_FAILED))
 	}
-	return id
+	return id, nil
 }
