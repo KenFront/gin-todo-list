@@ -14,65 +14,82 @@ import (
 )
 
 type logBase struct {
-	Ip           string      `json:"ip"`
-	UserId       uuid.UUID   `json:"user_id"`
-	StartAt      time.Time   `json:"start_at"`
-	EndAt        time.Time   `json:"end_at"`
-	StatusCode   int         `json:"status_code"`
-	Method       string      `json:"mathod"`
-	Path         string      `json:"path"`
-	Handlers     []string    `json:"handlers"`
-	ErrorMessage []string    `json:"error_message"`
-	Payload      interface{} `json:"payload"`
+	Ip            string      `json:"ip"`
+	UserId        uuid.UUID   `json:"user_id"`
+	StartAt       time.Time   `json:"start_at"`
+	EndAt         time.Time   `json:"end_at"`
+	StatusCode    int         `json:"status_code"`
+	Method        string      `json:"mathod"`
+	Path          string      `json:"path"`
+	Handlers      []string    `json:"handlers"`
+	ErrorMessages []string    `json:"error_message"`
+	Payload       interface{} `json:"payload"`
 }
 
-func UseComtomLogger(r *gin.Engine) {
+func getPath(c *gin.Context) string {
+	path := c.Request.URL.Path
+	raw := c.Request.URL.RawQuery
+	if raw == "" {
+		return path
+	}
 
-	r.Use(func(c *gin.Context) {
-		startAt := time.Now()
-		path := c.Request.URL.Path
-		raw := c.Request.URL.RawQuery
+	return path + "?" + raw
+}
 
-		body := c.Request.Body
-		x, _ := ioutil.ReadAll(body)
-		s := string(x)
-		var data interface{}
-		if err := json.Unmarshal([]byte(s), &data); err != nil {
-			panic(err)
-		}
-		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(x))
+func getPayload(c *gin.Context) interface{} {
+	body := c.Request.Body
+	x, _ := ioutil.ReadAll(body)
+	var data interface{}
+	if err := json.Unmarshal(x, &data); err != nil {
+		panic(err)
+	}
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(x))
+	return data
+}
 
-		c.Next()
+func getPrettyLog(log logBase) string {
+	formated, err := json.MarshalIndent(log, "", "  ")
+	if err != nil {
+		fmt.Println(log)
+	}
+	result := string(formated)
+	return result
+}
 
-		endAt := time.Now()
+func customLogger(c *gin.Context) {
+	startAt := time.Now()
+	path := getPath(c)
+	payload := getPayload(c)
 
-		if raw != "" {
-			path = path + "?" + raw
-		}
+	c.Next()
 
-		userId, _ := util.GetUserId(c)
+	endAt := time.Now()
+	userId, _ := util.GetUserId(c)
+	errorMessages := c.Errors.Errors()
+	log := logBase{
+		Ip:            c.ClientIP(),
+		UserId:        userId,
+		StartAt:       startAt,
+		EndAt:         endAt,
+		StatusCode:    c.Writer.Status(),
+		Method:        c.Request.Method,
+		Path:          path,
+		Handlers:      c.HandlerNames(),
+		ErrorMessages: c.Errors.Errors(),
+		Payload:       payload,
+	}
 
-		log := logBase{
-			Ip:           c.ClientIP(),
-			UserId:       userId,
-			StartAt:      startAt,
-			EndAt:        endAt,
-			StatusCode:   c.Writer.Status(),
-			Method:       c.Request.Method,
-			Path:         path,
-			Handlers:     c.HandlerNames(),
-			ErrorMessage: c.Errors.Errors(),
-			Payload:      data,
-		}
-		c.Errors.Errors()
-		formated, _ := json.MarshalIndent(log, "", "  ")
-		result := string(formated)
-		if len(log.ErrorMessage) == 0 {
-			fmt.Println(color.HiCyanString(result))
-		} else {
-			fmt.Println(color.HiRedString(result))
-		}
-	})
+	prettyLog := getPrettyLog(log)
+
+	if len(errorMessages) == 0 {
+		fmt.Println(color.HiCyanString(prettyLog))
+	} else {
+		fmt.Println(color.HiRedString(prettyLog))
+	}
+}
+
+func UseCustomLogger(r *gin.Engine) {
+	r.Use(customLogger)
 }
 
 func UseLogger(r *gin.Engine) {
