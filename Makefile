@@ -1,4 +1,4 @@
-TEST_COMMAND=go test -v -cover ./src/controller/...
+TEST_COMMAND= GIN_MODE=test go test -v -cover ./src/controller/...
 
 start:
 	POSTGRES_HOST=localhost go run ./src/main.go
@@ -15,6 +15,6 @@ down:
 test:
 	$(TEST_COMMAND)
 testAll:
-	go clean -testcache && GIN_MODE=release $(TEST_COMMAND)
+	go clean -testcache && $(TEST_COMMAND)
 lint:
 	golangci-lint run ./src/...
