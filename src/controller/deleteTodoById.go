@@ -3,35 +3,43 @@ package controller
 import (
 	"net/http"
 
-	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-func DeleteTodoById(c *gin.Context) {
-	var todo model.Todo
-	id := c.Param("todoId")
+type DeleteTodoProps struct {
+	Db        *gorm.DB
+	GetUserId func(c *gin.Context) (uuid.UUID, error)
+}
 
-	userId, err := util.GetUserId(c)
-	if err != nil {
-		util.ApiOnError(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
-			Error:      err,
+func DeleteTodoById(p DeleteTodoProps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var todo model.Todo
+		id := c.Param("todoId")
+
+		userId, err := p.GetUserId(c)
+		if err != nil {
+			util.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+				Error:      err,
+			})
+		}
+
+		if err := p.Db.Delete(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+			util.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  model.ERROR_DELETE_TODO_FAILED,
+				Error:      err,
+			})
+		}
+
+		util.ApiOnSuccess(c, &model.ApiSuccess{
+			StatusCode: http.StatusOK,
+			Data:       "Deleted successfully.",
 		})
 	}
-
-	if err := config.GetDB().Delete(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
-		util.ApiOnError(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  model.ERROR_DELETE_TODO_FAILED,
-			Error:      err,
-		})
-	}
-
-	util.ApiOnSuccess(c, &model.ApiSuccess{
-		StatusCode: http.StatusOK,
-		Data:       "Deleted successfully.",
-	})
 }

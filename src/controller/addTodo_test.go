@@ -1,15 +1,16 @@
-package controller
+package controller_test
 
 import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/stretchr/testify/assert"
 )
 
-type addTodoSuccessResponse struct {
+type SuccessAPIResponse struct {
 	Data model.Todo `json:"data"`
 }
 
@@ -28,12 +29,12 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 
 	gormDB := mock.GetMockGorm(t)
 
-	AddTodo(model.AddTodoProps{
+	controller.AddTodo(controller.AddTodoProps{
 		Db:        gormDB,
 		GetUserId: mock.UtilGetUserId,
 	})(c)
 
-	var resBody addTodoSuccessResponse
+	var resBody SuccessAPIResponse
 	mock.GetResponseBody(res.Body.Bytes(), &resBody)
 
 	assert.Equal(t, res.Code, http.StatusOK)
@@ -41,7 +42,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 	assert.Equal(t, resBody.Data.Description, fake.Description)
 }
 
-func TestAddTodoHanlderFailBydMissingPayloa(t *testing.T) {
+func TestAddTodoHanlderFailBydMissingPayload(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 
@@ -64,7 +65,7 @@ func TestAddTodoHanlderFailBydMissingPayloa(t *testing.T) {
 		assert.Equal(t, err.StatusCode, http.StatusBadRequest)
 		assert.Equal(t, err.ErrorType, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID)
 	}()
-	AddTodo(model.AddTodoProps{
+	controller.AddTodo(controller.AddTodoProps{
 		Db:        gormDB,
 		GetUserId: mock.UtilGetUserId,
 	})(c)
