@@ -7,19 +7,22 @@ import (
 	"io/ioutil"
 	"time"
 
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type logBase struct {
 	Ip           string      `json:"ip"`
+	UserId       uuid.UUID   `json:"user_id"`
 	StartAt      time.Time   `json:"start_at"`
 	EndAt        time.Time   `json:"end_at"`
 	StatusCode   int         `json:"status_code"`
 	Method       string      `json:"mathod"`
 	Path         string      `json:"path"`
 	Handlers     []string    `json:"handlers"`
-	ErrorMessage string      `json:"error_message"`
+	ErrorMessage []string    `json:"error_message"`
 	Payload      interface{} `json:"payload"`
 }
 
@@ -47,17 +50,21 @@ func UseComtomLogger(r *gin.Engine) {
 			path = path + "?" + raw
 		}
 
+		userId, _ := util.GetUserId(c)
+
 		log := logBase{
 			Ip:           c.ClientIP(),
+			UserId:       userId,
 			StartAt:      startAt,
 			EndAt:        endAt,
 			StatusCode:   c.Writer.Status(),
 			Method:       c.Request.Method,
 			Path:         path,
 			Handlers:     c.HandlerNames(),
-			ErrorMessage: c.Errors.String(),
+			ErrorMessage: c.Errors.Errors(),
 			Payload:      data,
 		}
+		c.Errors.Errors()
 		formated, _ := json.MarshalIndent(log, "", "  ")
 		result := string(formated)
 		if len(log.ErrorMessage) == 0 {

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -15,17 +16,25 @@ func catchError(c *gin.Context) {
 	switch {
 	case util.IsSameType(r, &model.ApiError{}):
 		err := r.(*model.ApiError)
-		if e := c.Error(err.Error); e != nil {
-			panic(e)
+		if e := c.Error(err.Error); e.Err != nil {
+			fmt.Println(e)
 		}
 		c.AbortWithStatusJSON(err.StatusCode, gin.H{
 			"error": err.ErrorType,
 		})
-	case r != nil && util.IsSameType(r, errors.New("")):
+	case util.IsSameType(r, errors.New("")):
 		err := r.(error)
-		if e := c.Error(err); e != nil {
-			panic(e)
+		if e := c.Error(err); e.Err != nil {
+			fmt.Println(e)
 		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": model.ERROR_UNKNOWN,
+		})
+	default:
+		if e := c.Error(errors.New(string(model.ERROR_UNKNOWN))); e.Err != nil {
+			fmt.Println(e)
+		}
+
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": model.ERROR_UNKNOWN,
 		})
