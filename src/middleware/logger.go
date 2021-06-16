@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"time"
 
 	"github.com/KenFront/gin-todo-list/src/util"
@@ -36,15 +37,11 @@ func getPath(c *gin.Context) string {
 	return path + "?" + raw
 }
 
-func getPayload(c *gin.Context) interface{} {
+func getPayload(c *gin.Context) string {
 	body := c.Request.Body
-	x, _ := ioutil.ReadAll(body)
-	var data interface{}
-	if err := json.Unmarshal(x, &data); err != nil {
-		fmt.Println(err)
-	}
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(x))
-	return data
+	data, _ := ioutil.ReadAll(body)
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
+	return string(data)
 }
 
 func getPrettyLog(log logBase) string {
@@ -56,10 +53,22 @@ func getPrettyLog(log logBase) string {
 	return result
 }
 
+func hideSecurityPayload(val string) interface{} {
+	securities := `\"(password|account)\": \".*\"`
+	re := regexp.MustCompile(securities)
+	result := re.ReplaceAllString(val, `"$1": "******"`)
+
+	var data interface{}
+	if err := json.Unmarshal([]byte(result), &data); err != nil {
+		fmt.Println(err)
+	}
+	return data
+}
+
 func customLogger(c *gin.Context) {
 	startAt := time.Now()
 	path := getPath(c)
-	payload := getPayload(c)
+	payload := hideSecurityPayload(getPayload(c))
 
 	c.Next()
 
