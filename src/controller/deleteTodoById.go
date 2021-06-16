@@ -29,6 +29,14 @@ func DeleteTodoById(p DeleteTodoProps) gin.HandlerFunc {
 			})
 		}
 
+		if err := p.Db.First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+			util.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  model.ERROR_DELETE_TODO_NOT_EXIST,
+				Error:      err,
+			})
+		}
+
 		if err := p.Db.Delete(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
@@ -39,7 +47,7 @@ func DeleteTodoById(p DeleteTodoProps) gin.HandlerFunc {
 
 		util.ApiOnSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
-			Data:       "Deleted successfully.",
+			Data:       todo,
 		})
 	}
 }

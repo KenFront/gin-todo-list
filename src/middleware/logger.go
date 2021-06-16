@@ -41,7 +41,7 @@ func getPayload(c *gin.Context) interface{} {
 	x, _ := ioutil.ReadAll(body)
 	var data interface{}
 	if err := json.Unmarshal(x, &data); err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(x))
 	return data
@@ -66,6 +66,7 @@ func customLogger(c *gin.Context) {
 	endAt := time.Now()
 	userId, _ := util.GetUserId(c)
 	errorMessages := c.Errors.Errors()
+
 	log := logBase{
 		Ip:            c.ClientIP(),
 		UserId:        userId,
