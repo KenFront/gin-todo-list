@@ -9,20 +9,28 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetMockGorm(t *testing.T) *gorm.DB {
+var gormDB *gorm.DB
+
+func newGorm() *gorm.DB {
 	gormDB, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 
 	if err != nil {
-		t.Fatalf("gorm error: %s", err)
+		panic(err)
 	}
 
 	if err := gormDB.AutoMigrate(&model.Todo{}); err != nil {
-		t.Fatalf("migreate todo error: %s", err)
+		panic(err)
 	}
 
 	if err := gormDB.AutoMigrate(&model.User{}); err != nil {
-		t.Fatalf("migreate user error: %s", err)
+		panic(err)
 	}
+	return gormDB
+}
 
+func GetMockGorm(t *testing.T) *gorm.DB {
+	if gormDB == nil {
+		gormDB = newGorm()
+	}
 	return gormDB
 }
