@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func GetUserId(c *gin.Context) (uuid.UUID, error) {
+func GetUserIdByToken(c *gin.Context) (uuid.UUID, error) {
 	claim, err := GetToken(c)
 
 	if err != nil {

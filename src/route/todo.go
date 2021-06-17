@@ -15,14 +15,15 @@ func UseTodos(r *gin.Engine) {
 	{
 		todos.GET("/", controller.GetTodos)
 		todos.POST("/", controller.AddTodo(controller.AddTodoProps{
-			Db:        db,
-			GetUserId: util.GetUserId,
+			Db:               db,
+			GetUserIdByToken: util.GetUserIdByToken,
+			GetNewTodoId:     util.GetNewUserId,
 		}))
 		todos.GET("/:todoId", controller.GetTodoById)
 		todos.PATCH("/:todoId", controller.PatchTodoById)
 		todos.DELETE("/:todoId", controller.DeleteTodoById(controller.DeleteTodoProps{
-			Db:        db,
-			GetUserId: util.GetUserId,
+			Db:               db,
+			GetUserIdByToken: util.GetUserIdByToken,
 		}))
 	}
 }

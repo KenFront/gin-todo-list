@@ -7,7 +7,6 @@ import (
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func Regiser(c *gin.Context) {
@@ -30,14 +29,7 @@ func Regiser(c *gin.Context) {
 		})
 	}
 
-	id, err := uuid.NewUUID()
-	if err != nil {
-		util.ApiOnError(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  model.ERROR_GENERATE_ID_FAILED,
-			Error:      err,
-		})
-	}
+	id := util.GetNewUserId()
 
 	user := model.User{
 		ID:       id,

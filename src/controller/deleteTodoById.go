@@ -11,8 +11,8 @@ import (
 )
 
 type DeleteTodoProps struct {
-	Db        *gorm.DB
-	GetUserId func(c *gin.Context) (uuid.UUID, error)
+	Db               *gorm.DB
+	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
 }
 
 func DeleteTodoById(p DeleteTodoProps) gin.HandlerFunc {
@@ -20,7 +20,7 @@ func DeleteTodoById(p DeleteTodoProps) gin.HandlerFunc {
 		var todo model.Todo
 		id := c.Param("todoId")
 
-		userId, err := p.GetUserId(c)
+		userId, err := p.GetUserIdByToken(c)
 		if err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,

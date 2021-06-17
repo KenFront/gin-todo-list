@@ -31,7 +31,7 @@ func PatchTodoById(c *gin.Context) {
 	var todo model.Todo
 	id := c.Params.ByName("todoId")
 
-	userId, err := util.GetUserId(c)
+	userId, err := util.GetUserIdByToken(c)
 	if err != nil {
 		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,

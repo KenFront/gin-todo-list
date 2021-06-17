@@ -7,16 +7,19 @@ import (
 	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDeleteTodoHanlderFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
+	userId := util.GetNewUserId()
+	todoId := util.GetNewTodoId()
+
 	c.Params = []gin.Param{
-		{Key: "todoId", Value: uuid.Nil.String()},
+		{Key: "todoId", Value: todoId.String()},
 	}
 
 	c.Request = &http.Request{
@@ -36,7 +39,7 @@ func TestDeleteTodoHanlderFailByNotExist(t *testing.T) {
 	}()
 
 	controller.DeleteTodoById(controller.DeleteTodoProps{
-		Db:        gormDB,
-		GetUserId: mock.UtilGetUserId,
+		Db:               gormDB,
+		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(c)
 }

@@ -73,7 +73,7 @@ func customLogger(c *gin.Context) {
 	c.Next()
 
 	endAt := time.Now()
-	userId, _ := util.GetUserId(c)
+	userId, _ := util.GetUserIdByToken(c)
 	errorMessages := c.Errors.Errors()
 
 	log := logBase{

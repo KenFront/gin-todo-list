@@ -5,6 +5,14 @@ import (
 	"github.com/google/uuid"
 )
 
-func UtilGetUserId(c *gin.Context) (uuid.UUID, error) {
-	return uuid.Nil, nil
+func UtilGetUserIdByToken(id uuid.UUID) func(c *gin.Context) (uuid.UUID, error) {
+	return func(c *gin.Context) (uuid.UUID, error) {
+		return id, nil
+	}
+}
+
+func UtilGetNewTodoId(id uuid.UUID) func(c *gin.Context) (uuid.UUID, error) {
+	return func(c *gin.Context) (uuid.UUID, error) {
+		return id, nil
+	}
 }

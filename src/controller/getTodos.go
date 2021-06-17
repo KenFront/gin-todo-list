@@ -12,7 +12,7 @@ import (
 func GetTodos(c *gin.Context) {
 	var todos []model.Todo
 
-	userId, err := util.GetUserId(c)
+	userId, err := util.GetUserIdByToken(c)
 	if err != nil {
 		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,

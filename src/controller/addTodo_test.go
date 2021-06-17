@@ -7,6 +7,7 @@ import (
 	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
+	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,6 +18,7 @@ type SuccessAPIResponse struct {
 func TestAddTodoHanlderSuccess(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
+	userId := util.GetNewUserId()
 
 	fake := model.AddTodo{
 		Title:       "123",
@@ -30,8 +32,9 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 	gormDB := mock.GetMockGorm(t)
 
 	controller.AddTodo(controller.AddTodoProps{
-		Db:        gormDB,
-		GetUserId: mock.UtilGetUserId,
+		Db:               gormDB,
+		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		GetNewTodoId:     util.GetNewTodoId,
 	})(c)
 
 	var resBody SuccessAPIResponse
@@ -45,6 +48,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 func TestAddTodoHanlderFailBydMissingPayload(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
+	userId := util.GetNewUserId()
 
 	fake := model.AddTodo{
 		Description: "456",
@@ -66,7 +70,8 @@ func TestAddTodoHanlderFailBydMissingPayload(t *testing.T) {
 		assert.Equal(t, err.ErrorType, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID)
 	}()
 	controller.AddTodo(controller.AddTodoProps{
-		Db:        gormDB,
-		GetUserId: mock.UtilGetUserId,
+		Db:               gormDB,
+		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		GetNewTodoId:     util.GetNewTodoId,
 	})(c)
 }

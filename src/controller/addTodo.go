@@ -11,8 +11,9 @@ import (
 )
 
 type AddTodoProps struct {
-	Db        *gorm.DB
-	GetUserId func(c *gin.Context) (uuid.UUID, error)
+	Db               *gorm.DB
+	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
+	GetNewTodoId     func() uuid.UUID
 }
 
 func AddTodo(p AddTodoProps) gin.HandlerFunc {
@@ -26,16 +27,9 @@ func AddTodo(p AddTodoProps) gin.HandlerFunc {
 			})
 		}
 
-		id, err := uuid.NewUUID()
-		if err != nil {
-			util.ApiOnError(&model.ApiError{
-				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  model.ERROR_GENERATE_ID_FAILED,
-				Error:      err,
-			})
-		}
+		id := p.GetNewTodoId()
 
-		userId, err := p.GetUserId(c)
+		userId, err := p.GetUserIdByToken(c)
 		if err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,

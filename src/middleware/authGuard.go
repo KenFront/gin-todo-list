@@ -11,7 +11,7 @@ import (
 
 func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		id, err := util.GetUserId(c)
+		id, err := util.GetUserIdByToken(c)
 		if err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
