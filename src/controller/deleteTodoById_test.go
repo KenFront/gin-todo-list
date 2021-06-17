@@ -12,6 +12,54 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestDeleteTodoHanlderSuccess(t *testing.T) {
+	resForAdd := mock.GetResponse()
+	cForAdd := mock.GetGinContext(resForAdd)
+	userId := util.GetNewUserId()
+	todoId := util.GetNewTodoId()
+	gormDB := mock.GetMockGorm(t)
+	fake := model.AddTodo{
+		Title:       "123",
+		Description: "456",
+	}
+
+	cForAdd.Request = &http.Request{
+		Header: make(http.Header),
+		Body:   mock.GetRequsetBody(fake),
+	}
+
+	controller.AddTodo(controller.AddTodoProps{
+		Db:               gormDB,
+		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
+	})(cForAdd)
+
+	assert.Equal(t, resForAdd.Code, http.StatusOK)
+
+	resForDelete := mock.GetResponse()
+	cForDelete := mock.GetGinContext(resForDelete)
+	cForDelete.Params = []gin.Param{
+		{Key: "todoId", Value: todoId.String()},
+	}
+
+	cForDelete.Request = &http.Request{
+		Header: make(http.Header),
+	}
+
+	controller.DeleteTodoById(controller.DeleteTodoProps{
+		Db:               gormDB,
+		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+	})(cForDelete)
+
+	var resBody SuccessAPIResponse
+	mock.GetResponseBody(resForDelete.Body.Bytes(), &resBody)
+
+	assert.Equal(t, resForDelete.Code, http.StatusOK)
+	assert.Equal(t, resBody.Data.ID, todoId)
+	assert.Equal(t, resBody.Data.Title, fake.Title)
+	assert.Equal(t, resBody.Data.Description, fake.Description)
+}
+
 func TestDeleteTodoHanlderFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
