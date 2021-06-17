@@ -35,7 +35,7 @@ func PatchTodoById(c *gin.Context) {
 	if err != nil {
 		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
-			ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      err,
 		})
 	}

@@ -12,10 +12,11 @@ import (
 func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := util.GetUserIdByToken(c)
+
 		if err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
-				ErrorType:  model.ERROR_NOT_FOUNT_THIS_USER,
+				ErrorType:  model.ErrorType(err.Error()),
 				Error:      err,
 			})
 		}
