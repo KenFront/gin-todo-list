@@ -3,35 +3,43 @@ package controller
 import (
 	"net/http"
 
-	"github.com/KenFront/gin-todo-list/src/config"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-func GetTodoById(c *gin.Context) {
-	var todo model.Todo
-	id := c.Param("todoId")
+type GetTodoByIdProps struct {
+	Db               *gorm.DB
+	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
+}
 
-	userId, err := util.GetUserIdByToken(c)
-	if err != nil {
-		util.ApiOnError(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  model.ERROR_SIGN_IN_FAILED,
-			Error:      err,
+func GetTodoById(p GetTodoByIdProps) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var todo model.Todo
+		id := c.Param("todoId")
+
+		userId, err := p.GetUserIdByToken(c)
+		if err != nil {
+			util.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
+
+		if err := p.Db.First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+			util.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusServiceUnavailable,
+				ErrorType:  model.ERROR_GET_TODO_BY_ID_FAILED,
+				Error:      err,
+			})
+		}
+
+		util.ApiOnSuccess(c, &model.ApiSuccess{
+			StatusCode: http.StatusOK,
+			Data:       todo,
 		})
 	}
-
-	if err := config.GetDB().First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
-		util.ApiOnError(&model.ApiError{
-			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  model.ERROR_GET_TODO_BY_ID_FAILED,
-			Error:      err,
-		})
-	}
-
-	util.ApiOnSuccess(c, &model.ApiSuccess{
-		StatusCode: http.StatusOK,
-		Data:       todo,
-	})
 }
