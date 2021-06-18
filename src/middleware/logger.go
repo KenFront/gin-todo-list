@@ -68,27 +68,29 @@ func customLogger(c *gin.Context) {
 	userId, _ := util.GetUserIdByToken(c)
 	errorMessages := c.Errors.Errors()
 
-	log := logBase{
-		Ip:            c.ClientIP(),
-		UserId:        userId,
-		StartAt:       startAt,
-		EndAt:         endAt,
-		StatusCode:    c.Writer.Status(),
-		Method:        c.Request.Method,
-		Path:          path,
-		Query:         query,
-		Handlers:      c.HandlerNames(),
-		ErrorMessages: c.Errors.Errors(),
-		Payload:       payload,
-	}
+	go func() {
+		log := logBase{
+			Ip:            c.ClientIP(),
+			UserId:        userId,
+			StartAt:       startAt,
+			EndAt:         endAt,
+			StatusCode:    c.Writer.Status(),
+			Method:        c.Request.Method,
+			Path:          path,
+			Query:         query,
+			Handlers:      c.HandlerNames(),
+			ErrorMessages: c.Errors.Errors(),
+			Payload:       payload,
+		}
 
-	prettyLog := getPrettyLog(log)
+		prettyLog := getPrettyLog(log)
 
-	if len(errorMessages) == 0 {
-		fmt.Println(color.HiCyanString(prettyLog))
-	} else {
-		fmt.Println(color.HiRedString(prettyLog))
-	}
+		if len(errorMessages) == 0 {
+			fmt.Println(color.HiCyanString(prettyLog))
+		} else {
+			fmt.Println(color.HiRedString(prettyLog))
+		}
+	}()
 }
 
 func UseCustomLogger(r *gin.Engine) {
