@@ -44,7 +44,7 @@ make lint
 ## Development
 
 ```bash
-// Build go server image
+# Build go server image
 make build
 
 # Launch all services
@@ -55,13 +55,13 @@ make upAll
 ## Deployment
 
 ```bash
-// run first time or enviroment changed
+# run first time or enviroment changed
 make setEnv
 
-// Launch database with migrate
+# Launch database with migrate
 make upDB
 
-// Launch go server
+# Launch go server
 make start
 ```
 
