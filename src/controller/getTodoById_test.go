@@ -51,7 +51,7 @@ func TestGetTodoByidTodoHanlderSuccess(t *testing.T) {
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(cForGetById)
 
-	var resBody SuccessAPIResponse
+	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(resForGetById.Body.Bytes(), &resBody)
 
 	assert.Equal(t, resForGetById.Code, http.StatusOK)

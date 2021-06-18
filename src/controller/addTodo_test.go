@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type SuccessAPIResponse struct {
+type SuccessTodoAPIResponse struct {
 	Data model.Todo `json:"data"`
 }
 
@@ -37,7 +37,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 		GetNewTodoId:     util.GetNewTodoId,
 	})(c)
 
-	var resBody SuccessAPIResponse
+	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(res.Body.Bytes(), &resBody)
 
 	assert.Equal(t, res.Code, http.StatusOK)

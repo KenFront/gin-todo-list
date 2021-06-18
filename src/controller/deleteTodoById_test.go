@@ -51,7 +51,7 @@ func TestDeleteTodoHanlderSuccess(t *testing.T) {
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(cForDelete)
 
-	var resBody SuccessAPIResponse
+	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(resForDelete.Body.Bytes(), &resBody)
 
 	assert.Equal(t, resForDelete.Code, http.StatusOK)
