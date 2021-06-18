@@ -2,7 +2,7 @@
 
 ## Description
 
-Basic todo list gin project
+Basic gin for Todo list
 
 ## Environment
 
