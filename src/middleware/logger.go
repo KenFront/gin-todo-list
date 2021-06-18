@@ -22,19 +22,10 @@ type logBase struct {
 	StatusCode    int         `json:"status_code"`
 	Method        string      `json:"mathod"`
 	Path          string      `json:"path"`
+	Query         string      `json:"query"`
 	Handlers      []string    `json:"handlers"`
 	ErrorMessages []string    `json:"error_message"`
 	Payload       interface{} `json:"payload"`
-}
-
-func getPath(c *gin.Context) string {
-	path := c.Request.URL.Path
-	raw := c.Request.URL.RawQuery
-	if raw == "" {
-		return path
-	}
-
-	return path + "?" + raw
 }
 
 func getPayload(c *gin.Context) string {
@@ -67,7 +58,8 @@ func hideSecurityPayload(val string) interface{} {
 
 func customLogger(c *gin.Context) {
 	startAt := time.Now()
-	path := getPath(c)
+	path := c.Request.URL.Path
+	query := c.Request.URL.RawQuery
 	payload := hideSecurityPayload(getPayload(c))
 
 	c.Next()
@@ -84,6 +76,7 @@ func customLogger(c *gin.Context) {
 		StatusCode:    c.Writer.Status(),
 		Method:        c.Request.Method,
 		Path:          path,
+		Query:         query,
 		Handlers:      c.HandlerNames(),
 		ErrorMessages: c.Errors.Errors(),
 		Payload:       payload,
