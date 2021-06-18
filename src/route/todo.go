@@ -13,11 +13,11 @@ func UseTodos(r *gin.Engine) {
 	db := config.GetDB()
 	middleware.UseAuthGuard(todos)
 	{
-		todos.GET("/", controller.GetTodos(controller.GetTodosProps{
+		todos.GET("", controller.GetTodos(controller.GetTodosProps{
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
 		}))
-		todos.POST("/", controller.AddTodo(controller.AddTodoProps{
+		todos.POST("", controller.AddTodo(controller.AddTodoProps{
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
 			GetNewTodoId:     util.GetNewUserId,

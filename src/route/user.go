@@ -8,6 +8,6 @@ import (
 func UseUser(r *gin.Engine) {
 	users := r.Group("/users")
 	{
-		users.POST("/", controller.AddUser)
+		users.POST("", controller.AddUser)
 	}
 }
