@@ -5,7 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UseAuth(r *gin.Engine) {
-	r.POST("/signin", controller.SignIn)
-	r.POST("/signout", controller.SignOut)
+func UseUser(r *gin.Engine) {
+	users := r.Group("/users")
+	{
+		users.POST("/", controller.AddUser)
+	}
 }

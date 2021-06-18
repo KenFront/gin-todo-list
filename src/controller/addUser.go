@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Regiser(c *gin.Context) {
+func AddUser(c *gin.Context) {
 	var payload model.AddUser
 
 	if err := c.ShouldBindJSON(&payload); err != nil {

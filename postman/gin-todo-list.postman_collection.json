@@ -230,7 +230,7 @@
 			"response": []
 		},
 		{
-			"name": "register",
+			"name": "addUser",
 			"event": [
 				{
 					"listen": "test",
@@ -260,12 +260,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{domain}}/register",
+					"raw": "{{domain}}/users",
 					"host": [
 						"{{domain}}"
 					],
 					"path": [
-						"register"
+						"users"
 					]
 				}
 			},
