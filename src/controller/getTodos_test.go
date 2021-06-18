@@ -16,7 +16,7 @@ type SuccessTodosAPIResponse struct {
 	Data []model.Todo `json:"data"`
 }
 
-func TestGetTodosTodoHanlderSuccess(t *testing.T) {
+func TestGetTodosTodoSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	cForAdd := mock.GetGinContext(resForAdd)
 	userId := util.GetNewUserId()

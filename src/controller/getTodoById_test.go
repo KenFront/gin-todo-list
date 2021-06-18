@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetTodoByidTodoHanlderSuccess(t *testing.T) {
+func TestGetTodoByidTodoSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	cForAdd := mock.GetGinContext(resForAdd)
 	userId := util.GetNewUserId()
@@ -60,7 +60,7 @@ func TestGetTodoByidTodoHanlderSuccess(t *testing.T) {
 	assert.Equal(t, resBody.Data.Description, fake.Description)
 }
 
-func TestGetTodoByidTodoHanlderFailByNotExist(t *testing.T) {
+func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()

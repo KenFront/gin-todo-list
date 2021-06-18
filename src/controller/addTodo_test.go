@@ -15,7 +15,7 @@ type SuccessTodoAPIResponse struct {
 	Data model.Todo `json:"data"`
 }
 
-func TestAddTodoHanlderSuccess(t *testing.T) {
+func TestAddTodoSuccess(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
@@ -45,7 +45,7 @@ func TestAddTodoHanlderSuccess(t *testing.T) {
 	assert.Equal(t, resBody.Data.Description, fake.Description)
 }
 
-func TestAddTodoHanlderFailBydMissingPayload(t *testing.T) {
+func TestAddTodoFailBydMissingPayload(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()

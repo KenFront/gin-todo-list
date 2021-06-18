@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDeleteTodoHanlderSuccess(t *testing.T) {
+func TestDeleteTodoSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	cForAdd := mock.GetGinContext(resForAdd)
 	userId := util.GetNewUserId()
@@ -60,7 +60,7 @@ func TestDeleteTodoHanlderSuccess(t *testing.T) {
 	assert.Equal(t, resBody.Data.Description, fake.Description)
 }
 
-func TestDeleteTodoHanlderFailByNotExist(t *testing.T) {
+func TestDeleteTodoFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
