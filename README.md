@@ -72,6 +72,7 @@ For local testing
 
 ## Todolist
 
+- diagram
 - Swagger
 - System log(MongoDb)
 - Nginx(Docker-compose)
