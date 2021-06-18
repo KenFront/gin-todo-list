@@ -37,7 +37,7 @@ make test
 # Run unit test without cache
 make testAll
 
-# Run lint with golangci-lint
+# Run golangci-lint
 make lint
 ```
 
