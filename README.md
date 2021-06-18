@@ -73,6 +73,7 @@ For local testing
 ## Todolist
 
 - diagram
+- Cron
 - Swagger
 - System log(MongoDb)
 - Nginx(Docker-compose)
