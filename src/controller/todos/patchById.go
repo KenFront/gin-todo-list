@@ -1,4 +1,4 @@
-package controller
+package controller_todos
 
 import (
 	"errors"
@@ -11,12 +11,12 @@ import (
 	"gorm.io/gorm"
 )
 
-type PatchTodoProps struct {
+type PatchProps struct {
 	Db               *gorm.DB
 	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
 }
 
-func PatchTodoById(p PatchTodoProps) gin.HandlerFunc {
+func PatchById(p PatchProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload model.PatchTodo
 		if err := c.ShouldBindJSON(&payload); err != nil {

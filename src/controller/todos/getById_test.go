@@ -1,10 +1,10 @@
-package controller_test
+package controller_todos_test
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/KenFront/gin-todo-list/src/controller"
+	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
@@ -18,7 +18,7 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
-	fake := model.AddTodo{
+	fake := model.Add{
 		Title:       "123",
 		Description: "456",
 	}
@@ -28,7 +28,7 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 		Body:   mock.GetRequsetBody(fake),
 	}
 
-	controller.AddTodo(controller.AddTodoProps{
+	controller_todos.Add(controller_todos.AddProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
@@ -46,7 +46,7 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 		Header: make(http.Header),
 	}
 
-	controller.GetTodoById(controller.GetTodoByIdProps{
+	controller_todos.GetById(controller_todos.GetByIdProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(cForGetById)
@@ -86,7 +86,7 @@ func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
 		assert.Equal(t, model.ERROR_GET_TODO_BY_ID_FAILED, err.ErrorType)
 	}()
 
-	controller.GetTodoById(controller.GetTodoByIdProps{
+	controller_todos.GetById(controller_todos.GetByIdProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(c)

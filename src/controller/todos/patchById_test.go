@@ -1,10 +1,10 @@
-package controller_test
+package controller_todos_test
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/KenFront/gin-todo-list/src/controller"
+	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
@@ -18,7 +18,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
-	fake := model.AddTodo{
+	fake := model.Add{
 		Title:       "123",
 		Description: "456",
 	}
@@ -28,7 +28,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 		Body:   mock.GetRequsetBody(fake),
 	}
 
-	controller.AddTodo(controller.AddTodoProps{
+	controller_todos.Add(controller_todos.AddProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
@@ -50,7 +50,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 		Body:   mock.GetRequsetBody(fakePatch),
 	}
 
-	controller.PatchTodoById(controller.PatchTodoProps{
+	controller_todos.PatchById(controller_todos.PatchProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(cForPatch)
@@ -95,7 +95,7 @@ func TestPatchTodoFailByNotExist(t *testing.T) {
 		assert.Equal(t, model.ERROR_GET_PATCHED_TODO_FAILED, err.ErrorType)
 	}()
 
-	controller.PatchTodoById(controller.PatchTodoProps{
+	controller_todos.PatchById(controller_todos.PatchProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(c)
@@ -107,7 +107,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
-	fake := model.AddTodo{
+	fake := model.Add{
 		Title:       "123",
 		Description: "456",
 	}
@@ -117,7 +117,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 		Body:   mock.GetRequsetBody(fake),
 	}
 
-	controller.AddTodo(controller.AddTodoProps{
+	controller_todos.Add(controller_todos.AddProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
@@ -151,7 +151,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 		assert.Equal(t, model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD, err.ErrorType)
 	}()
 
-	controller.PatchTodoById(controller.PatchTodoProps{
+	controller_todos.PatchById(controller_todos.PatchProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(cForPatch)

@@ -1,4 +1,4 @@
-package controller
+package controller_todos
 
 import (
 	"net/http"
@@ -10,15 +10,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type GetTodoByIdProps struct {
+type GetListProps struct {
 	Db               *gorm.DB
 	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
 }
 
-func GetTodoById(p GetTodoByIdProps) gin.HandlerFunc {
+func GetList(p GetListProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var todo model.Todo
-		id := c.Param("todoId")
+		var todos []model.Todo
 
 		userId, err := p.GetUserIdByToken(c)
 		if err != nil {
@@ -29,17 +28,17 @@ func GetTodoById(p GetTodoByIdProps) gin.HandlerFunc {
 			})
 		}
 
-		if err := p.Db.First(&todo, "id = ? AND user_id = ?", id, userId).Error; err != nil {
+		if err := p.Db.Find(&todos, "user_id = ?", userId).Error; err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
-				ErrorType:  model.ERROR_GET_TODO_BY_ID_FAILED,
+				ErrorType:  model.ERROR_GET_TODOS_FAILED,
 				Error:      err,
 			})
 		}
 
 		util.ApiOnSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
-			Data:       todo,
+			Data:       todos,
 		})
 	}
 }

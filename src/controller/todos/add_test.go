@@ -1,10 +1,10 @@
-package controller_test
+package controller_todos_test
 
 import (
 	"net/http"
 	"testing"
 
-	"github.com/KenFront/gin-todo-list/src/controller"
+	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
@@ -20,7 +20,7 @@ func TestAddTodoSuccess(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 
-	fake := model.AddTodo{
+	fake := model.Add{
 		Title:       "123",
 		Description: "456",
 	}
@@ -31,7 +31,7 @@ func TestAddTodoSuccess(t *testing.T) {
 
 	gormDB := mock.GetMockGorm(t)
 
-	controller.AddTodo(controller.AddTodoProps{
+	controller_todos.Add(controller_todos.AddProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 		GetNewTodoId:     util.GetNewTodoId,
@@ -50,7 +50,7 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 
-	fake := model.AddTodo{
+	fake := model.Add{
 		Description: "456",
 	}
 	c.Request = &http.Request{
@@ -69,7 +69,7 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
 		assert.Equal(t, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID, err.ErrorType)
 	}()
-	controller.AddTodo(controller.AddTodoProps{
+	controller_todos.Add(controller_todos.AddProps{
 		Db:               gormDB,
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 		GetNewTodoId:     util.GetNewTodoId,

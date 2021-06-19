@@ -1,4 +1,4 @@
-package controller
+package controller_users
 
 import (
 	"net/http"
@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddUser(c *gin.Context) {
+func Add(c *gin.Context) {
 	var payload model.AddUser
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
