@@ -26,7 +26,10 @@ func UseTodos(r *gin.Engine) {
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
 		}))
-		todos.PATCH("/:todoId", controller.PatchTodoById)
+		todos.PATCH("/:todoId", controller.PatchTodoById(controller.PatchTodoProps{
+			Db:               db,
+			GetUserIdByToken: util.GetUserIdByToken,
+		}))
 		todos.DELETE("/:todoId", controller.DeleteTodoById(controller.DeleteTodoProps{
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
