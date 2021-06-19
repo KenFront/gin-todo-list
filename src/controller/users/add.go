@@ -42,14 +42,14 @@ func Add(c *gin.Context) {
 	if err := config.GetDB().Create(&user).Error; err != nil {
 		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  model.ERROR_GET_CREATED_USER_FAILED,
+			ErrorType:  model.ERROR_CREATE_USER_FAILED,
 			Error:      err,
 		})
 	}
 	if err := config.GetDB().First(&user, "id = ?", id).Error; err != nil {
 		util.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
-			ErrorType:  model.ERROR_CREATE_USER_FAILED,
+			ErrorType:  model.ERROR_GET_CREATED_USER_FAILED,
 			Error:      err,
 		})
 	}
