@@ -18,8 +18,8 @@ type Todo struct {
 	Title       string     `gorm:"type:string;size:100" json:"title"`
 	Description string     `gorm:"type:string;size:65535" json:"description"`
 	Status      TodoStauts `gorm:"type:string;size:32;default:'idle';check:status IN ('idle', 'completed')" json:"status"`
-	CreatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createAt"`
-	UpdatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updateAt"`
+	CreatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createdAt"`
+	UpdatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updatedAt"`
 	UserId      uuid.UUID  `gorm:"type:uuid;foreignKey;" json:"userId"`
 }
 
