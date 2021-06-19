@@ -7,13 +7,11 @@ import (
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type GetProps struct {
-	Db               *gorm.DB
-	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
+	Db *gorm.DB
 }
 
 func Get(p GetProps) gin.HandlerFunc {
