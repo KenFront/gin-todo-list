@@ -40,9 +40,9 @@ func TestAddTodoSuccess(t *testing.T) {
 	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(res.Body.Bytes(), &resBody)
 
-	assert.Equal(t, res.Code, http.StatusOK)
-	assert.Equal(t, resBody.Data.Title, fake.Title)
-	assert.Equal(t, resBody.Data.Description, fake.Description)
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, fake.Title, resBody.Data.Title)
+	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
 func TestAddTodoFailBydMissingPayload(t *testing.T) {
@@ -66,8 +66,8 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 		err := r.(*model.ApiError)
-		assert.Equal(t, err.StatusCode, http.StatusBadRequest)
-		assert.Equal(t, err.ErrorType, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID, err.ErrorType)
 	}()
 	controller.AddTodo(controller.AddTodoProps{
 		Db:               gormDB,

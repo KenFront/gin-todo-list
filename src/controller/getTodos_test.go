@@ -38,7 +38,7 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
-	assert.Equal(t, resForAdd.Code, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForList := mock.GetResponse()
 	cForList := mock.GetGinContext(resForList)
@@ -58,9 +58,9 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	var resBody SuccessTodosAPIResponse
 	mock.GetResponseBody(resForList.Body.Bytes(), &resBody)
 
-	assert.Equal(t, resForList.Code, http.StatusOK)
-	assert.Equal(t, resBody.Data[0].ID, todoId)
-	assert.Equal(t, resBody.Data[0].Title, fake.Title)
-	assert.Equal(t, resBody.Data[0].Description, fake.Description)
-	assert.Equal(t, len(resBody.Data), 1)
+	assert.Equal(t, http.StatusOK, resForList.Code)
+	assert.Equal(t, todoId, resBody.Data[0].ID)
+	assert.Equal(t, fake.Title, resBody.Data[0].Title)
+	assert.Equal(t, fake.Description, resBody.Data[0].Description)
+	assert.Equal(t, 1, len(resBody.Data))
 }

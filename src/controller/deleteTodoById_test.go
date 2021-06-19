@@ -34,7 +34,7 @@ func TestDeleteTodoSuccess(t *testing.T) {
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
-	assert.Equal(t, resForAdd.Code, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForDelete := mock.GetResponse()
 	cForDelete := mock.GetGinContext(resForDelete)
@@ -54,10 +54,10 @@ func TestDeleteTodoSuccess(t *testing.T) {
 	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(resForDelete.Body.Bytes(), &resBody)
 
-	assert.Equal(t, resForDelete.Code, http.StatusOK)
-	assert.Equal(t, resBody.Data.ID, todoId)
-	assert.Equal(t, resBody.Data.Title, fake.Title)
-	assert.Equal(t, resBody.Data.Description, fake.Description)
+	assert.Equal(t, http.StatusOK, resForDelete.Code)
+	assert.Equal(t, todoId, resBody.Data.ID)
+	assert.Equal(t, fake.Title, resBody.Data.Title)
+	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
 func TestDeleteTodoFailByNotExist(t *testing.T) {
@@ -82,8 +82,8 @@ func TestDeleteTodoFailByNotExist(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 		err := r.(*model.ApiError)
-		assert.Equal(t, err.StatusCode, http.StatusServiceUnavailable)
-		assert.Equal(t, err.ErrorType, model.ERROR_DELETE_TODO_NOT_EXIST)
+		assert.Equal(t, http.StatusServiceUnavailable, err.StatusCode)
+		assert.Equal(t, model.ERROR_DELETE_TODO_NOT_EXIST, err.ErrorType)
 	}()
 
 	controller.DeleteTodoById(controller.DeleteTodoProps{

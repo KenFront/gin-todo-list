@@ -20,8 +20,8 @@ func TestPing(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, res.Code, http.StatusOK)
-	assert.Equal(t, jsonResponse, gin.H{
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, gin.H{
 		"data": "Server is working",
-	})
+	}, jsonResponse)
 }

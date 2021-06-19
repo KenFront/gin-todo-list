@@ -34,7 +34,7 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
-	assert.Equal(t, resForAdd.Code, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForGetById := mock.GetResponse()
 	cForGetById := mock.GetGinContext(resForGetById)
@@ -54,10 +54,10 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(resForGetById.Body.Bytes(), &resBody)
 
-	assert.Equal(t, resForGetById.Code, http.StatusOK)
-	assert.Equal(t, resBody.Data.ID, todoId)
-	assert.Equal(t, resBody.Data.Title, fake.Title)
-	assert.Equal(t, resBody.Data.Description, fake.Description)
+	assert.Equal(t, http.StatusOK, resForGetById.Code)
+	assert.Equal(t, todoId, resBody.Data.ID)
+	assert.Equal(t, fake.Title, resBody.Data.Title)
+	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
 func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
@@ -82,8 +82,8 @@ func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 		err := r.(*model.ApiError)
-		assert.Equal(t, err.StatusCode, http.StatusServiceUnavailable)
-		assert.Equal(t, err.ErrorType, model.ERROR_GET_TODO_BY_ID_FAILED)
+		assert.Equal(t, http.StatusServiceUnavailable, err.StatusCode)
+		assert.Equal(t, model.ERROR_GET_TODO_BY_ID_FAILED, err.ErrorType)
 	}()
 
 	controller.GetTodoById(controller.GetTodoByIdProps{

@@ -34,7 +34,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
-	assert.Equal(t, resForAdd.Code, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForPatch := mock.GetResponse()
 	cForPatch := mock.GetGinContext(resForPatch)
@@ -58,10 +58,10 @@ func TestPatchTodoSuccess(t *testing.T) {
 	var resBody SuccessTodoAPIResponse
 	mock.GetResponseBody(resForPatch.Body.Bytes(), &resBody)
 
-	assert.Equal(t, resForPatch.Code, http.StatusOK)
-	assert.Equal(t, resBody.Data.ID, todoId)
-	assert.Equal(t, resBody.Data.Title, fakePatch.Title)
-	assert.Equal(t, resBody.Data.Description, fake.Description)
+	assert.Equal(t, http.StatusOK, resForPatch.Code)
+	assert.Equal(t, todoId, resBody.Data.ID)
+	assert.Equal(t, fakePatch.Title, resBody.Data.Title)
+	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
 func TestPatchTodoFailByNotExist(t *testing.T) {
@@ -91,8 +91,8 @@ func TestPatchTodoFailByNotExist(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 		err := r.(*model.ApiError)
-		assert.Equal(t, err.StatusCode, http.StatusServiceUnavailable)
-		assert.Equal(t, err.ErrorType, model.ERROR_GET_PATCHED_TODO_FAILED)
+		assert.Equal(t, http.StatusServiceUnavailable, err.StatusCode)
+		assert.Equal(t, model.ERROR_GET_PATCHED_TODO_FAILED, err.ErrorType)
 	}()
 
 	controller.PatchTodoById(controller.PatchTodoProps{
@@ -123,7 +123,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
-	assert.Equal(t, resForAdd.Code, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForPatch := mock.GetResponse()
 	cForPatch := mock.GetGinContext(resForPatch)
@@ -147,8 +147,8 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 		err := r.(*model.ApiError)
-		assert.Equal(t, err.StatusCode, http.StatusBadRequest)
-		assert.Equal(t, err.ErrorType, model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_NO_VALUE_IN_PATCH_TODO_PAYLOAD, err.ErrorType)
 	}()
 
 	controller.PatchTodoById(controller.PatchTodoProps{
