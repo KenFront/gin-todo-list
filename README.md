@@ -72,6 +72,7 @@ For local testing
 
 ## Todolist
 
+- User CRUD
 - diagram
 - Cron
 - Swagger
