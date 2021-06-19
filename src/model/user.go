@@ -20,7 +20,7 @@ type User struct {
 	Account   string     `gorm:"type:string;size:100;unique" json:"account"`
 	Password  string     `gorm:"type:string;size:100" json:"-"`
 	Email     string     `gorm:"type:string;size:255" json:"email"`
-	Status    UserStauts `gorm:"default:'active'" sql:"type:ENUM('active', 'inactive', 'forbidden');" json:"status"`
+	Status    UserStauts `gorm:"type:string;size:32;default:'active';check:status IN ('active', 'inactive', 'forbidden')" json:"status"`
 	CreatedAt time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createAt"`
 	UpdatedAt time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updateAt"`
 }
