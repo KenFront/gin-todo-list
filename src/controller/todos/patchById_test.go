@@ -18,6 +18,9 @@ func TestPatchTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
+
+	cForAdd.Set("userId", userId)
+
 	fake := model.Add{
 		Title:       "123",
 		Description: "456",
@@ -38,6 +41,9 @@ func TestPatchTodoSuccess(t *testing.T) {
 
 	resForPatch := mock.GetResponse()
 	cForPatch := mock.GetGinContext(resForPatch)
+
+	cForPatch.Set("userId", userId)
+
 	fakePatch := model.PatchTodo{
 		Title: "patched",
 	}
@@ -51,8 +57,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.PatchById(controller_todos.PatchProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(cForPatch)
 
 	var resBody SuccessTodoAPIResponse
@@ -69,6 +74,8 @@ func TestPatchTodoFailByNotExist(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
+
+	c.Set("userId", userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -96,8 +103,7 @@ func TestPatchTodoFailByNotExist(t *testing.T) {
 	}()
 
 	controller_todos.PatchById(controller_todos.PatchProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(c)
 }
 
@@ -107,6 +113,9 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
+
+	cForAdd.Set("userId", userId)
+
 	fake := model.Add{
 		Title:       "123",
 		Description: "456",
@@ -127,6 +136,8 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 
 	resForPatch := mock.GetResponse()
 	cForPatch := mock.GetGinContext(resForPatch)
+
+	cForPatch.Set("userId", userId)
 
 	cForPatch.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -152,7 +163,6 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 	}()
 
 	controller_todos.PatchById(controller_todos.PatchProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(cForPatch)
 }

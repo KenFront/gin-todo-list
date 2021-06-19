@@ -1,6 +1,7 @@
 package controller_users
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -19,12 +20,12 @@ func Get(p GetProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
 
-		id, err := p.GetUserIdByToken(c)
-		if err != nil {
+		id, isExist := c.Get("userId")
+		if !isExist {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_SIGN_IN_FAILED,
-				Error:      err,
+				Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
 			})
 		}
 

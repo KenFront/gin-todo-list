@@ -14,25 +14,20 @@ func UseTodos(r *gin.Engine) {
 	middleware.UseAuthGuard(todos)
 	{
 		todos.GET("", controller_todos.GetList(controller_todos.GetListProps{
-			Db:               db,
-			GetUserIdByToken: util.GetUserIdByToken,
+			Db: db,
 		}))
 		todos.POST("", controller_todos.Add(controller_todos.AddProps{
-			Db:               db,
-			GetUserIdByToken: util.GetUserIdByToken,
-			GetNewTodoId:     util.GetNewUserId,
+			Db:           db,
+			GetNewTodoId: util.GetNewUserId,
 		}))
 		todos.GET("/:todoId", controller_todos.GetById(controller_todos.GetByIdProps{
-			Db:               db,
-			GetUserIdByToken: util.GetUserIdByToken,
+			Db: db,
 		}))
 		todos.PATCH("/:todoId", controller_todos.PatchById(controller_todos.PatchProps{
-			Db:               db,
-			GetUserIdByToken: util.GetUserIdByToken,
+			Db: db,
 		}))
 		todos.DELETE("/:todoId", controller_todos.DeleteById(controller_todos.DeleteProps{
-			Db:               db,
-			GetUserIdByToken: util.GetUserIdByToken,
+			Db: db,
 		}))
 	}
 }

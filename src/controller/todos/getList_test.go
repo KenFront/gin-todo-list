@@ -22,6 +22,9 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
+
+	cForAdd.Set("userId", userId)
+
 	fake := model.Add{
 		Title:       "123",
 		Description: "456",
@@ -33,15 +36,17 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
+		Db:           gormDB,
+		GetNewTodoId: mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForList := mock.GetResponse()
 	cForList := mock.GetGinContext(resForList)
+
+	cForList.Set("userId", userId)
+
 	cForList.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
 	}
@@ -51,8 +56,7 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.GetList(controller_todos.GetListProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(cForList)
 
 	var resBody SuccessTodosAPIResponse

@@ -12,7 +12,6 @@ import (
 func authGuard() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id, err := util.GetUserIdByToken(c)
-
 		if err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
@@ -32,6 +31,9 @@ func authGuard() gin.HandlerFunc {
 				Error:      err,
 			})
 		}
+
+		c.Set("userId", id)
+
 		c.Next()
 	}
 }

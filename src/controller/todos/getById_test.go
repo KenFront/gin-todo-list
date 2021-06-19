@@ -12,12 +12,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetTodoByidTodoSuccess(t *testing.T) {
+func TestGetTodoByIdSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	cForAdd := mock.GetGinContext(resForAdd)
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
+	cForAdd.Set("userId", userId)
+
 	fake := model.Add{
 		Title:       "123",
 		Description: "456",
@@ -29,15 +31,17 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
+		Db:           gormDB,
+		GetNewTodoId: mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForGetById := mock.GetResponse()
 	cForGetById := mock.GetGinContext(resForGetById)
+
+	cForGetById.Set("userId", userId)
+
 	cForGetById.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
 	}
@@ -47,8 +51,7 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.GetById(controller_todos.GetByIdProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(cForGetById)
 
 	var resBody SuccessTodoAPIResponse
@@ -60,11 +63,12 @@ func TestGetTodoByidTodoSuccess(t *testing.T) {
 	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
-func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
+func TestGetTodoByIdFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
+	c.Set("userId", userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -87,7 +91,6 @@ func TestGetTodoByidTodoFailByNotExist(t *testing.T) {
 	}()
 
 	controller_todos.GetById(controller_todos.GetByIdProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(c)
 }

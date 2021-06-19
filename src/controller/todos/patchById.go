@@ -7,13 +7,11 @@ import (
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type PatchProps struct {
-	Db               *gorm.DB
-	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
+	Db *gorm.DB
 }
 
 func PatchById(p PatchProps) gin.HandlerFunc {
@@ -35,12 +33,12 @@ func PatchById(p PatchProps) gin.HandlerFunc {
 			})
 		}
 
-		userId, err := p.GetUserIdByToken(c)
-		if err != nil {
+		userId, isExist := c.Get("userId")
+		if !isExist {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_SIGN_IN_FAILED,
-				Error:      err,
+				Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
 			})
 		}
 

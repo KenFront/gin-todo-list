@@ -19,6 +19,7 @@ func TestAddTodoSuccess(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
+	c.Set("userId", userId)
 
 	fake := model.Add{
 		Title:       "123",
@@ -49,6 +50,7 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
+	c.Set("userId", userId)
 
 	fake := model.Add{
 		Description: "456",
@@ -70,8 +72,7 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 		assert.Equal(t, model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID, err.ErrorType)
 	}()
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     util.GetNewTodoId,
+		Db:           gormDB,
+		GetNewTodoId: util.GetNewTodoId,
 	})(c)
 }

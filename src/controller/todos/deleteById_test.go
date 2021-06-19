@@ -18,6 +18,9 @@ func TestDeleteTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
+
+	cForAdd.Set("userId", userId)
+
 	fake := model.Add{
 		Title:       "123",
 		Description: "456",
@@ -38,6 +41,8 @@ func TestDeleteTodoSuccess(t *testing.T) {
 
 	resForDelete := mock.GetResponse()
 	cForDelete := mock.GetGinContext(resForDelete)
+	cForDelete.Set("userId", userId)
+
 	cForDelete.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
 	}
@@ -47,8 +52,7 @@ func TestDeleteTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.DeleteById(controller_todos.DeleteProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(cForDelete)
 
 	var resBody SuccessTodoAPIResponse
@@ -65,6 +69,7 @@ func TestDeleteTodoFailByNotExist(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
+	c.Set("userId", userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -87,7 +92,6 @@ func TestDeleteTodoFailByNotExist(t *testing.T) {
 	}()
 
 	controller_todos.DeleteById(controller_todos.DeleteProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
+		Db: gormDB,
 	})(c)
 }
