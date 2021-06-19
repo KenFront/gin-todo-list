@@ -241,6 +241,7 @@
 							"if (responseData.data && responseData.data.id) {",
 							"    pm.environment.set(\"userAccount\", responseData.data.account);",
 							"    pm.environment.set(\"userPassword\", requestData.password);",
+							"    pm.environment.set(\"userId\", responseData.data.id);",
 							"}"
 						],
 						"type": "text/javascript"
@@ -266,6 +267,42 @@
 					],
 					"path": [
 						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/users/{{userId}}",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{domain}}/users/self",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"users",
+						"self"
 					]
 				}
 			},

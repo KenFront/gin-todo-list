@@ -20,6 +20,10 @@ func UseUser(r *gin.Engine) {
 	usersWithAuth := r.Group("/users")
 	middleware.UseAuthGuard(usersWithAuth)
 	{
+		usersWithAuth.GET("/self", controller_users.Get(controller_users.GetProps{
+			Db:               db,
+			GetUserIdByToken: util.GetUserIdByToken,
+		}))
 		usersWithAuth.DELETE("/:userId", controller_users.DeleteById(controller_users.DeleteProps{
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
