@@ -8,7 +8,6 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -65,7 +64,15 @@ func customLogger(c *gin.Context) {
 	c.Next()
 
 	endAt := time.Now()
-	userId, _ := util.GetUserIdByToken(c)
+
+	userIdByContext, isExist := c.Get("userId")
+	var userId uuid.UUID
+	if isExist {
+		userId = userIdByContext.(uuid.UUID)
+	} else {
+		userId = uuid.Nil
+	}
+
 	errorMessages := c.Errors.Errors()
 
 	go func() {

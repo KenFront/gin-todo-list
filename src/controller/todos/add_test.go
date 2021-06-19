@@ -33,9 +33,8 @@ func TestAddTodoSuccess(t *testing.T) {
 	gormDB := mock.GetMockGorm(t)
 
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     util.GetNewTodoId,
+		Db:           gormDB,
+		GetNewTodoId: util.GetNewTodoId,
 	})(c)
 
 	var resBody SuccessTodoAPIResponse

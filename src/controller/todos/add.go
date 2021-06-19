@@ -12,9 +12,8 @@ import (
 )
 
 type AddProps struct {
-	Db               *gorm.DB
-	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
-	GetNewTodoId     func() uuid.UUID
+	Db           *gorm.DB
+	GetNewTodoId func() uuid.UUID
 }
 
 func Add(p AddProps) gin.HandlerFunc {

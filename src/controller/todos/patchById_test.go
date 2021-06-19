@@ -32,9 +32,8 @@ func TestPatchTodoSuccess(t *testing.T) {
 	}
 
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
+		Db:           gormDB,
+		GetNewTodoId: mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
@@ -127,9 +126,8 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 	}
 
 	controller_todos.Add(controller_todos.AddProps{
-		Db:               gormDB,
-		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
-		GetNewTodoId:     mock.UtilGetNewTodoId(todoId),
+		Db:           gormDB,
+		GetNewTodoId: mock.UtilGetNewTodoId(todoId),
 	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
