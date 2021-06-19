@@ -278,13 +278,13 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{domain}}/users/{{userId}}",
+					"raw": "{{domain}}/users/self",
 					"host": [
 						"{{domain}}"
 					],
 					"path": [
 						"users",
-						"{{userId}}"
+						"self"
 					]
 				}
 			},

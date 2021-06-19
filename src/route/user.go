@@ -24,7 +24,7 @@ func UseUser(r *gin.Engine) {
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
 		}))
-		usersWithAuth.DELETE("/:userId", controller_users.DeleteById(controller_users.DeleteProps{
+		usersWithAuth.DELETE("/self", controller_users.Delete(controller_users.DeleteProps{
 			Db:               db,
 			GetUserIdByToken: util.GetUserIdByToken,
 		}))

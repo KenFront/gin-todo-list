@@ -16,12 +16,11 @@ type DeleteProps struct {
 	GetUserIdByToken func(c *gin.Context) (uuid.UUID, error)
 }
 
-func DeleteById(p DeleteProps) gin.HandlerFunc {
+func Delete(p DeleteProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
-		id := c.Param("userId")
 
-		userIdByContext, isExist := c.Get("userId")
+		userId, isExist := c.Get("userId")
 		if !isExist {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
@@ -30,17 +29,7 @@ func DeleteById(p DeleteProps) gin.HandlerFunc {
 			})
 		}
 
-		userId := userIdByContext.(uuid.UUID)
-
-		if id != userId.String() {
-			util.ApiOnError(&model.ApiError{
-				StatusCode: http.StatusBadRequest,
-				ErrorType:  model.ERROR_NOT_DELETE_SELF,
-				Error:      errors.New(string(model.ERROR_NOT_DELETE_SELF)),
-			})
-		}
-
-		if err := p.Db.First(&user, "id = ?", id).Error; err != nil {
+		if err := p.Db.First(&user, "id = ?", userId).Error; err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_DELETE_USER_NOT_EXIST,
