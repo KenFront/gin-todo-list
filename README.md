@@ -77,7 +77,7 @@ make upAll
 
 ## Todolist
 
-- User CRUD
+- controller and middleware unit test
 - diagram
 - Cron
 - Swagger
