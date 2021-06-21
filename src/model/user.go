@@ -37,3 +37,11 @@ type SignIn struct {
 	Account  string `binding:"min=3,max=100" json:"account"`
 	Password string `binding:"min=3,max=100" json:"password"`
 }
+
+type PatchUser struct {
+	Name     string     `binding:"omitempty,max=100" json:"name"`
+	Account  string     `binding:"omitempty,max=100" json:"account"`
+	Password string     `binding:"omitempty,max=100" json:"-"`
+	Email    string     `binding:"omitempty,email,max=255" json:"email"`
+	Status   UserStauts `binding:"omitempty,oneof=active inactive forbidden" json:"status"`
+}

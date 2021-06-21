@@ -25,5 +25,8 @@ func UseUser(r *gin.Engine) {
 		usersWithAuth.DELETE("/self", controller_users.Delete(controller_users.DeleteProps{
 			Db: db,
 		}))
+		usersWithAuth.PATCH("/self", controller_users.Patch(controller_users.PatchProps{
+			Db: db,
+		}))
 	}
 }

@@ -307,6 +307,33 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "patchUser",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"patched\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{domain}}/users/self",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"users",
+						"self"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [
