@@ -35,7 +35,7 @@ func Delete(p DeleteProps) gin.HandlerFunc {
 			})
 		}
 
-		if err := p.Db.Delete(&user).Error; err != nil {
+		if err := p.Db.Delete(&user, "id = ?", userId).Error; err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_DELETE_USER_FAILED,
