@@ -42,6 +42,14 @@ func SignIn(c *gin.Context) {
 		})
 	}
 
+	if user.Status != model.USER_ACTIVE {
+		util.ApiOnError(&model.ApiError{
+			StatusCode: http.StatusServiceUnavailable,
+			ErrorType:  model.ERROR_USER_IS_NOT_ACTIVE,
+			Error:      errors.New(string(model.ERROR_USER_IS_NOT_ACTIVE)),
+		})
+	}
+
 	err := util.SetAuth(c, user.ID.String())
 	if err != nil {
 		util.ApiOnError(&model.ApiError{
