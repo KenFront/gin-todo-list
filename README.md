@@ -19,6 +19,9 @@ make start
 # Set runtime enviroment
 make setEnv
 
+# Set database data volume path
+make setDatabaseData
+
 # Build go server image
 make build
 
@@ -55,6 +58,9 @@ make upAll
 ## Deployment
 
 ```bash
+# run first time
+make setDatabaseData
+
 # run first time or enviroment changed
 make setEnv
 

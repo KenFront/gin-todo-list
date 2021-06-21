@@ -4,6 +4,8 @@ start:
 	POSTGRES_HOST=localhost go run ./src/main.go
 setEnv:
 	cp .env.example .env
+setDatabaseData:
+	mkdir ./db/data
 build:
 	docker build -t kenfront/gin-todolist:latest .
 upDB:
