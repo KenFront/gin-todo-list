@@ -47,17 +47,6 @@ make lint
 ## Development
 
 ```bash
-# Build go server image
-make build
-
-# Launch all services
-make upAll
-```
-
-
-## Deployment
-
-```bash
 # run first time
 make setDatabaseData
 
@@ -71,10 +60,20 @@ make upDB
 make start
 ```
 
+## Deployment
+
+```bash
+# Build go server image
+make build
+
+# Launch all services
+make upAll
+```
+
 ## Postman
 
 - domain: http://localhost
-For local testing
+  For local testing
 
 ## Todolist
 
