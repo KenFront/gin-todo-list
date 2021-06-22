@@ -34,13 +34,11 @@ func catchError(c *gin.Context) {
 	}
 }
 
-func errorHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		defer catchError(c)
-		c.Next()
-	}
+func errorHandler(c *gin.Context) {
+	defer catchError(c)
+	c.Next()
 }
 
 func UseErrorHandler(r *gin.Engine) gin.IRoutes {
-	return r.Use(errorHandler())
+	return r.Use(errorHandler)
 }
