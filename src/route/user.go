@@ -4,6 +4,7 @@ import (
 	"github.com/KenFront/gin-todo-list/src/config"
 	controller_users "github.com/KenFront/gin-todo-list/src/controller/users"
 	"github.com/KenFront/gin-todo-list/src/middleware"
+	"github.com/KenFront/gin-todo-list/src/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,10 @@ func UseUser(r *gin.Engine) {
 
 	users := r.Group("/users")
 	{
-		users.POST("", controller_users.Add)
+		users.POST("", controller_users.Add(controller_users.AddProps{
+			Db:           db,
+			GetNewUserId: util.GetNewUserId,
+		}))
 	}
 
 	usersWithAuth := r.Group("/users")
