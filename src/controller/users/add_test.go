@@ -1,7 +1,6 @@
 package controller_users_test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -32,8 +31,6 @@ func TestAddUserSuccess(t *testing.T) {
 		Body:   mock.GetRequsetBody(fake),
 	}
 
-	fmt.Println(fake)
-
 	var resBody SuccessUserAPIResponse
 
 	controller_users.Add(controller_users.AddProps{
@@ -47,4 +44,30 @@ func TestAddUserSuccess(t *testing.T) {
 	assert.Equal(t, fake.Email, resBody.Data.Email)
 	assert.Equal(t, fake.Account, resBody.Data.Account)
 	assert.NotEqual(t, fake.Password, resBody.Data.Password)
+}
+
+func TestAddUserFailBydMissingPayload(t *testing.T) {
+	res := mock.GetResponse()
+	c := mock.GetGinContext(res)
+
+	gormDB := mock.GetMockGorm(t)
+
+	c.Request = &http.Request{
+		Header: make(http.Header),
+	}
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("The code did not panic")
+		}
+		err := r.(*model.ApiError)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_CREATE_USER_PAYLOAD_IS_INVALID, err.ErrorType)
+	}()
+
+	controller_users.Add(controller_users.AddProps{
+		Db:           gormDB,
+		GetNewUserId: util.GetNewUserId,
+	})(c)
 }
