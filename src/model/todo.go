@@ -33,3 +33,7 @@ type PatchTodo struct {
 	Description string     `binding:"omitempty,max=65535" json:"description"`
 	Status      TodoStauts `binding:"omitempty,oneof=idle completed" json:"status"`
 }
+
+type TodoUri struct {
+	TodoId string `uri:"todoId" binding:"required,uuid"`
+}
