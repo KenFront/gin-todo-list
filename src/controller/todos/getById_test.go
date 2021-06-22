@@ -20,7 +20,7 @@ func TestGetTodoByIdSuccess(t *testing.T) {
 	gormDB := mock.GetMockGorm(t)
 	cForAdd.Set("userId", userId)
 
-	fake := model.Add{
+	fake := model.AddTodo{
 		Title:       "123",
 		Description: "456",
 	}

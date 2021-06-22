@@ -21,7 +21,7 @@ func TestAddTodoSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	c.Set("userId", userId)
 
-	fake := model.Add{
+	fake := model.AddTodo{
 		Title:       "123",
 		Description: "456",
 	}
@@ -51,7 +51,7 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 	userId := util.GetNewUserId()
 	c.Set("userId", userId)
 
-	fake := model.Add{
+	fake := model.AddTodo{
 		Description: "456",
 	}
 	c.Request = &http.Request{

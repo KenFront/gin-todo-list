@@ -21,7 +21,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 
 	cForAdd.Set("userId", userId)
 
-	fake := model.Add{
+	fake := model.AddTodo{
 		Title:       "123",
 		Description: "456",
 	}
@@ -115,7 +115,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 
 	cForAdd.Set("userId", userId)
 
-	fake := model.Add{
+	fake := model.AddTodo{
 		Title:       "123",
 		Description: "456",
 	}

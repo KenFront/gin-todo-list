@@ -18,7 +18,7 @@ type AddProps struct {
 
 func Add(p AddProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload model.Add
+		var payload model.AddTodo
 		if err := c.ShouldBindJSON(&payload); err != nil {
 			util.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,

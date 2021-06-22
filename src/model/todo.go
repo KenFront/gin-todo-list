@@ -23,7 +23,7 @@ type Todo struct {
 	UserId      uuid.UUID  `gorm:"type:uuid;foreignKey;" json:"userId"`
 }
 
-type Add struct {
+type AddTodo struct {
 	Title       string `binding:"min=1,max=100" json:"title"`
 	Description string `binding:"min=1,max=65535" json:"description"`
 }
