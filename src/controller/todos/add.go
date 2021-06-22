@@ -27,8 +27,6 @@ func Add(p AddProps) gin.HandlerFunc {
 			})
 		}
 
-		id := p.GetNewTodoId()
-
 		userIdByContext, isExist := c.Get("userId")
 
 		if !isExist {
@@ -40,6 +38,7 @@ func Add(p AddProps) gin.HandlerFunc {
 		}
 
 		userId := userIdByContext.(uuid.UUID)
+		id := p.GetNewTodoId()
 
 		todo := model.Todo{
 			ID:          id,
