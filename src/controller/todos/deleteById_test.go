@@ -63,6 +63,37 @@ func TestDeleteTodoSuccess(t *testing.T) {
 	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
+func TestDeleteTodoByIdFailByIdValidatingError(t *testing.T) {
+	res := mock.GetResponse()
+	c := mock.GetGinContext(res)
+	userId := util.GetNewUserId()
+	c.Set("userId", userId)
+
+	c.Params = []gin.Param{
+		{Key: "todoId", Value: "123"},
+	}
+
+	c.Request = &http.Request{
+		Header: make(http.Header),
+	}
+
+	gormDB := mock.GetMockGorm(t)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("The code did not panic")
+		}
+		err := r.(*model.ApiError)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_DELETE_TODO_PATH_FAILED, err.ErrorType)
+	}()
+
+	controller_todos.DeleteById(controller_todos.DeleteProps{
+		Db: gormDB,
+	})(c)
+}
+
 func TestDeleteTodoFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)

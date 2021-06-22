@@ -63,6 +63,37 @@ func TestGetTodoByIdSuccess(t *testing.T) {
 	assert.Equal(t, fake.Description, resBody.Data.Description)
 }
 
+func TestGetTodoByIdFailByIdValidatingError(t *testing.T) {
+	res := mock.GetResponse()
+	c := mock.GetGinContext(res)
+	userId := util.GetNewUserId()
+	c.Set("userId", userId)
+
+	c.Params = []gin.Param{
+		{Key: "todoId", Value: "123"},
+	}
+
+	c.Request = &http.Request{
+		Header: make(http.Header),
+	}
+
+	gormDB := mock.GetMockGorm(t)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("The code did not panic")
+		}
+		err := r.(*model.ApiError)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_DELETE_TODO_PATH_FAILED, err.ErrorType)
+	}()
+
+	controller_todos.GetById(controller_todos.GetByIdProps{
+		Db: gormDB,
+	})(c)
+}
+
 func TestGetTodoByIdFailByNotExist(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)

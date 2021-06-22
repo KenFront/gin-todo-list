@@ -8,7 +8,6 @@ import (
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,10 +46,6 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 
 	cForList.Set("userId", userId)
 
-	cForList.Params = []gin.Param{
-		{Key: "todoId", Value: todoId.String()},
-	}
-
 	cForList.Request = &http.Request{
 		Header: make(http.Header),
 	}
@@ -67,4 +62,29 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	assert.Equal(t, fake.Title, resBody.Data[0].Title)
 	assert.Equal(t, fake.Description, resBody.Data[0].Description)
 	assert.Equal(t, 1, len(resBody.Data))
+}
+
+func TestGetTodosFailedByNoUserId(t *testing.T) {
+	res := mock.GetResponse()
+	c := mock.GetGinContext(res)
+
+	c.Request = &http.Request{
+		Header: make(http.Header),
+	}
+
+	gormDB := mock.GetMockGorm(t)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("The code did not panic")
+		}
+		err := r.(*model.ApiError)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_SIGN_IN_FAILED, err.ErrorType)
+	}()
+
+	controller_todos.GetList(controller_todos.GetListProps{
+		Db: gormDB,
+	})(c)
 }

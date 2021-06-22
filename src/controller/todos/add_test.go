@@ -75,3 +75,33 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 		GetNewTodoId: util.GetNewTodoId,
 	})(c)
 }
+
+func TestAddTodoFailBydMissingUserId(t *testing.T) {
+	res := mock.GetResponse()
+	c := mock.GetGinContext(res)
+
+	fake := model.AddTodo{
+		Title:       "123",
+		Description: "456",
+	}
+	c.Request = &http.Request{
+		Header: make(http.Header),
+		Body:   mock.GetRequsetBody(fake),
+	}
+
+	gormDB := mock.GetMockGorm(t)
+
+	defer func() {
+		r := recover()
+		if r == nil {
+			t.Errorf("The code did not panic")
+		}
+		err := r.(*model.ApiError)
+		assert.Equal(t, http.StatusBadRequest, err.StatusCode)
+		assert.Equal(t, model.ERROR_SIGN_IN_FAILED, err.ErrorType)
+	}()
+	controller_todos.Add(controller_todos.AddProps{
+		Db:           gormDB,
+		GetNewTodoId: util.GetNewTodoId,
+	})(c)
+}
