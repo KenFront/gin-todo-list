@@ -20,7 +20,7 @@ type Todo struct {
 	Status      TodoStauts `gorm:"type:string;size:32;default:'idle';check:status IN ('idle', 'completed')" json:"status"`
 	CreatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"createdAt"`
 	UpdatedAt   time.Time  `sql:"DEFAULT:'current_timestamp'" json:"updatedAt"`
-	UserId      uuid.UUID  `gorm:"type:uuid;foreignKey;" json:"userId"`
+	UserId      uuid.UUID  `gorm:"type:uuid;foreignKey:User;" json:"userId"`
 }
 
 type AddTodo struct {
