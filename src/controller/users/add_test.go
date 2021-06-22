@@ -1,6 +1,7 @@
 package controller_users_test
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -24,19 +25,14 @@ func TestAddUserSuccess(t *testing.T) {
 
 	gormDB := mock.GetMockGorm(t)
 
-	fake := model.AddUser{
-		Name:  "Testing",
-		Email: "test@test.com",
-		SignIn: model.SignIn{
-			Account:  "test",
-			Password: "test",
-		},
-	}
+	fake := mock.GetMockUser()
 
 	c.Request = &http.Request{
 		Header: make(http.Header),
 		Body:   mock.GetRequsetBody(fake),
 	}
+
+	fmt.Println(fake)
 
 	var resBody SuccessUserAPIResponse
 
