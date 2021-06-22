@@ -16,6 +16,9 @@ Basic gin for Todo list
 # Launch go server
 make start
 
+# Update go module required packages
+make update
+
 # Set runtime enviroment
 make setEnv
 

@@ -2,6 +2,8 @@ TEST_COMMAND= GIN_MODE=test go test -v -cover ./src/controller/...
 
 start:
 	POSTGRES_HOST=localhost go run ./src/main.go
+update:
+	go get -u ./...
 setEnv:
 	cp .env.example .env
 setDatabaseData:
