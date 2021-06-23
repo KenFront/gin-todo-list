@@ -12,7 +12,7 @@ var (
 	authKey = "auth"
 )
 
-func GetToken(c *gin.Context) (*authClaims, error) {
+func getToken(c *gin.Context) (*authClaims, error) {
 	cookie, err := c.Cookie(authKey)
 	if err != nil {
 		return &authClaims{}, errors.New(string(model.ERROR_NOT_SIGN_IN_YET))

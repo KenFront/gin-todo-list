@@ -9,7 +9,7 @@ import (
 )
 
 func GetUserIdByToken(c *gin.Context) (uuid.UUID, error) {
-	claim, err := GetToken(c)
+	claim, err := getToken(c)
 
 	if err != nil {
 		return uuid.Nil, err
