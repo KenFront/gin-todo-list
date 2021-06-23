@@ -34,12 +34,12 @@ func TestDeleteUserSuccess(t *testing.T) {
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForDelete := mock.GetResponse()
-	cRorAddDelte := mock.GetGinContext(resForDelete)
-	cRorAddDelte.Set("userId", userId)
+	cForDelete := mock.GetGinContext(resForDelete)
+	cForDelete.Set("userId", userId)
 
 	controller_users.Delete(controller_users.DeleteProps{
 		Db: gormDB,
-	})(cRorAddDelte)
+	})(cForDelete)
 
 	var resBody SuccessUserAPIResponse
 	mock.GetResponseBody(resForDelete.Body.Bytes(), &resBody)
