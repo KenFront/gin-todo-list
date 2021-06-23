@@ -44,7 +44,7 @@ func Add(p AddProps) gin.HandlerFunc {
 			ID:          id,
 			Title:       payload.Title,
 			Description: payload.Description,
-			UserId:      userId,
+			UserId:      &userId,
 		}
 
 		if err := p.Db.Create(&todo).Error; err != nil {
