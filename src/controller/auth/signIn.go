@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/config"
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,7 @@ func SignIn(c *gin.Context) {
 	var payload model.SignIn
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_SIGN_IN_PAYLOAD_IS_INVALID,
 			Error:      err,
@@ -27,7 +28,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	if err := config.GetDB().First(&user, "account = ?", payload.Account).Error; err != nil {
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      err,
@@ -35,7 +36,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	if !util.CheckPasswordHash(payload.Password, user.Password) {
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusUnauthorized,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
@@ -43,7 +44,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	if user.Status != model.USER_ACTIVE {
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_USER_IS_NOT_ACTIVE,
 			Error:      errors.New(string(model.ERROR_USER_IS_NOT_ACTIVE)),
@@ -52,14 +53,14 @@ func SignIn(c *gin.Context) {
 
 	err := util.SetAuth(c, user.ID.String())
 	if err != nil {
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      err,
 		})
 	}
 
-	util.ApiOnSuccess(c, &model.ApiSuccess{
+	controller.ApiOnSuccess(c, &model.ApiSuccess{
 		StatusCode: http.StatusOK,
 		Data:       "Sign in successfully",
 	})

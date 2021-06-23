@@ -3,6 +3,7 @@ package controller_users
 import (
 	"net/http"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,7 @@ func Add(p AddProps) gin.HandlerFunc {
 		var payload model.AddUser
 
 		if err := c.ShouldBindJSON(&payload); err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_CREATE_USER_PAYLOAD_IS_INVALID,
 				Error:      err,
@@ -29,7 +30,7 @@ func Add(p AddProps) gin.HandlerFunc {
 
 		hashedPassword, err := util.HashPassword(payload.Password)
 		if err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_HASH_PASSWORD_FAILD,
 				Error:      err,
@@ -47,7 +48,7 @@ func Add(p AddProps) gin.HandlerFunc {
 		}
 
 		if err := p.Db.Create(&user).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_CREATE_USER_FAILED,
 				Error:      err,
@@ -55,14 +56,14 @@ func Add(p AddProps) gin.HandlerFunc {
 		}
 
 		if err := p.Db.First(&user, "id = ?", id).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_GET_CREATED_USER_FAILED,
 				Error:      err,
 			})
 		}
 
-		util.ApiOnSuccess(c, &model.ApiSuccess{
+		controller.ApiOnSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
 			Data:       user,
 		})

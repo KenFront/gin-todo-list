@@ -5,7 +5,6 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
-	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -20,7 +19,7 @@ func Add(p AddProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload model.AddTodo
 		if err := c.ShouldBindJSON(&payload); err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_CREATE_TODO_PAYLOAD_IS_INVALID,
 				Error:      err,
@@ -39,7 +38,7 @@ func Add(p AddProps) gin.HandlerFunc {
 		}
 
 		if err := p.Db.Create(&todo).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_CREATE_TODO_FAILED,
 				Error:      err,
@@ -47,14 +46,14 @@ func Add(p AddProps) gin.HandlerFunc {
 		}
 
 		if err := p.Db.First(&todo, "id = ?", id).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_GET_CREATED_TODO_FAILED,
 				Error:      err,
 			})
 		}
 
-		util.ApiOnSuccess(c, &model.ApiSuccess{
+		controller.ApiOnSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
 			Data:       todo,
 		})

@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/model"
-	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -21,7 +20,7 @@ func SetUserId(c *gin.Context, id uuid.UUID) {
 func GetUserId(c *gin.Context) uuid.UUID {
 	userId, isExist := c.Get(userIdKey)
 	if !isExist {
-		util.ApiOnError(&model.ApiError{
+		ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
@@ -31,4 +30,14 @@ func GetUserId(c *gin.Context) uuid.UUID {
 	id := userId.(uuid.UUID)
 
 	return id
+}
+
+func ApiOnSuccess(c *gin.Context, res *model.ApiSuccess) {
+	c.JSON(res.StatusCode, gin.H{
+		"data": res.Data,
+	})
+}
+
+func ApiOnError(res *model.ApiError) {
+	panic(res)
 }

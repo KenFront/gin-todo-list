@@ -6,7 +6,6 @@ import (
 
 	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
-	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -19,7 +18,7 @@ func Patch(p PatchProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var payload model.PatchUser
 		if err := c.ShouldBindJSON(&payload); err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_PATCH_USER_PAYLOAD_IS_INVALID,
 				Error:      err,
@@ -27,7 +26,7 @@ func Patch(p PatchProps) gin.HandlerFunc {
 		}
 
 		if (model.PatchUser{} == payload) {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusBadRequest,
 				ErrorType:  model.ERROR_NO_VALUE_IN_PATCH_USER_PAYLOAD,
 				Error:      errors.New(string(model.ERROR_NO_VALUE_IN_PATCH_USER_PAYLOAD)),
@@ -45,7 +44,7 @@ func Patch(p PatchProps) gin.HandlerFunc {
 			Email:    payload.Email,
 			Status:   payload.Status,
 		}).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_PATCH_USER_FAILED,
 				Error:      err,
@@ -53,14 +52,14 @@ func Patch(p PatchProps) gin.HandlerFunc {
 		}
 
 		if err := p.Db.First(&user, "id = ?", id).Error; err != nil {
-			util.ApiOnError(&model.ApiError{
+			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_GET_PATCHED_USER_FAILED,
 				Error:      err,
 			})
 		}
 
-		util.ApiOnSuccess(c, &model.ApiSuccess{
+		controller.ApiOnSuccess(c, &model.ApiSuccess{
 			StatusCode: http.StatusOK,
 			Data:       user,
 		})

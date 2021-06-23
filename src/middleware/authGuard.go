@@ -14,7 +14,7 @@ func authGuard(c *gin.Context) {
 	id, err := util.GetUserIdByToken(c)
 	if err != nil {
 		util.DeleteAuth(c)
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusBadRequest,
 			ErrorType:  model.ErrorType(err.Error()),
 			Error:      err,
@@ -27,7 +27,7 @@ func authGuard(c *gin.Context) {
 
 	if err := config.GetDB().First(&user, "id = ?", id).Error; err != nil {
 		util.DeleteAuth(c)
-		util.ApiOnError(&model.ApiError{
+		controller.ApiOnError(&model.ApiError{
 			StatusCode: http.StatusServiceUnavailable,
 			ErrorType:  model.ERROR_SIGN_IN_FAILED,
 			Error:      err,
