@@ -12,12 +12,12 @@ type authClaims struct {
 	jwt.StandardClaims
 }
 
-func NewJwtToken(userId string) (string, error) {
+func newJwtToken(userId string) (string, error) {
 	env := config.GetEnv()
 	claims := authClaims{
 		UserId: userId,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: GetAuthExpiresAt(),
+			ExpiresAt: getAuthExpiresAt(),
 			Issuer:    env.JWT_ISSUER,
 		},
 	}

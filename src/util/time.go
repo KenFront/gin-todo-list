@@ -2,13 +2,13 @@ package util
 
 import "time"
 
-func GetAuthDuration() int {
+func getAuthDuration() int {
 	const hour = 60 * 60
 
 	return 1 * hour
 }
 
-func GetAuthExpiresAt() int64 {
+func getAuthExpiresAt() int64 {
 	return time.Now().Add(1 * time.Hour).UTC().Unix()
 }
 

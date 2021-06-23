@@ -31,12 +31,12 @@ func getToken(c *gin.Context) (*authClaims, error) {
 }
 
 func SetAuth(c *gin.Context, userId string) error {
-	token, err := NewJwtToken(userId)
+	token, err := newJwtToken(userId)
 	if err != nil {
 		return err
 	}
 	env := config.GetEnv()
-	c.SetCookie(authKey, token, GetAuthDuration(), "/", env.DOMAIN, env.DOMAIN != "localhost", true)
+	c.SetCookie(authKey, token, getAuthDuration(), "/", env.DOMAIN, env.DOMAIN != "localhost", true)
 	return nil
 }
 
