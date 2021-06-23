@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
@@ -33,14 +34,7 @@ func Patch(p PatchProps) gin.HandlerFunc {
 			})
 		}
 
-		id, isExist := c.Get("userId")
-		if !isExist {
-			util.ApiOnError(&model.ApiError{
-				StatusCode: http.StatusBadRequest,
-				ErrorType:  model.ERROR_SIGN_IN_FAILED,
-				Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
-			})
-		}
+		id := controller.GetUserId(c)
 
 		var user model.User
 

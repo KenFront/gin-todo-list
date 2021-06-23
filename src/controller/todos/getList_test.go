@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -22,7 +23,7 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
 
-	cForAdd.Set("userId", userId)
+	controller.SetUserId(cForAdd, userId)
 
 	fake := model.AddTodo{
 		Title:       "123",
@@ -44,7 +45,7 @@ func TestGetTodosTodoSuccess(t *testing.T) {
 	resForList := mock.GetResponse()
 	cForList := mock.GetGinContext(resForList)
 
-	cForList.Set("userId", userId)
+	controller.SetUserId(cForList, userId)
 
 	cForList.Request = &http.Request{
 		Header: make(http.Header),

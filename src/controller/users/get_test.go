@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_users "github.com/KenFront/gin-todo-list/src/controller/users"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -35,7 +36,8 @@ func TestGetUserSuccess(t *testing.T) {
 
 	resForGet := mock.GetResponse()
 	cRorGet := mock.GetGinContext(resForGet)
-	cRorGet.Set("userId", userId)
+
+	controller.SetUserId(cRorGet, userId)
 
 	controller_users.Get(controller_users.GetProps{
 		Db: gormDB,

@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/config"
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,7 @@ func authGuard(c *gin.Context) {
 		})
 	}
 
-	c.Set("userId", id)
+	controller.SetUserId(c, id)
 
 	c.Next()
 }

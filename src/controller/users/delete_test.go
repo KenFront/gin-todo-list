@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_users "github.com/KenFront/gin-todo-list/src/controller/users"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -35,7 +36,8 @@ func TestDeleteUserSuccess(t *testing.T) {
 
 	resForDelete := mock.GetResponse()
 	cForDelete := mock.GetGinContext(resForDelete)
-	cForDelete.Set("userId", userId)
+
+	controller.SetUserId(cForDelete, userId)
 
 	controller_users.Delete(controller_users.DeleteProps{
 		Db: gormDB,
@@ -75,7 +77,8 @@ func TestDeleteUserFailedByNotExisted(t *testing.T) {
 	res := mock.GetResponse()
 	userId := util.GetNewTodoId()
 	c := mock.GetGinContext(res)
-	c.Set("userId", userId)
+
+	controller.SetUserId(c, userId)
 
 	gormDB := mock.GetMockGorm(t)
 

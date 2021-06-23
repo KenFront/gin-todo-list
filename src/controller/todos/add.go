@@ -1,9 +1,9 @@
 package controller_todos
 
 import (
-	"errors"
 	"net/http"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/KenFront/gin-todo-list/src/util"
 	"github.com/gin-gonic/gin"
@@ -27,17 +27,8 @@ func Add(p AddProps) gin.HandlerFunc {
 			})
 		}
 
-		userIdByContext, isExist := c.Get("userId")
+		userId := controller.GetUserId(c)
 
-		if !isExist {
-			util.ApiOnError(&model.ApiError{
-				StatusCode: http.StatusBadRequest,
-				ErrorType:  model.ERROR_SIGN_IN_FAILED,
-				Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
-			})
-		}
-
-		userId := userIdByContext.(uuid.UUID)
 		id := p.GetNewTodoId()
 
 		todo := model.Todo{

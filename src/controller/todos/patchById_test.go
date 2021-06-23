@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -19,7 +20,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
 
-	cForAdd.Set("userId", userId)
+	controller.SetUserId(cForAdd, userId)
 
 	fake := model.AddTodo{
 		Title:       "123",
@@ -41,7 +42,7 @@ func TestPatchTodoSuccess(t *testing.T) {
 	resForPatch := mock.GetResponse()
 	cForPatch := mock.GetGinContext(resForPatch)
 
-	cForPatch.Set("userId", userId)
+	controller.SetUserId(cForPatch, userId)
 
 	fakePatch := model.PatchTodo{
 		Title: "patched",
@@ -73,7 +74,7 @@ func TestPatchTodoByIdFailByIdValidatingError(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 
-	c.Set("userId", userId)
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: "123"},
@@ -111,7 +112,7 @@ func TestPatchTodoByIdFailByWrongPayload(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 
-	c.Set("userId", userId)
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -149,7 +150,7 @@ func TestPatchTodoFailedByNoNeededPayload(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 
-	c.Set("userId", userId)
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -222,7 +223,7 @@ func TestPatchTodoFailByNotExist(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 
-	c.Set("userId", userId)
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},

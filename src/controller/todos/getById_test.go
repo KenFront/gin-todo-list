@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -18,7 +19,8 @@ func TestGetTodoByIdSuccess(t *testing.T) {
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
 	gormDB := mock.GetMockGorm(t)
-	cForAdd.Set("userId", userId)
+
+	controller.SetUserId(cForAdd, userId)
 
 	fake := model.AddTodo{
 		Title:       "123",
@@ -40,7 +42,7 @@ func TestGetTodoByIdSuccess(t *testing.T) {
 	resForGetById := mock.GetResponse()
 	cForGetById := mock.GetGinContext(resForGetById)
 
-	cForGetById.Set("userId", userId)
+	controller.SetUserId(cForGetById, userId)
 
 	cForGetById.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},
@@ -67,7 +69,8 @@ func TestGetTodoByIdFailByIdValidatingError(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
-	c.Set("userId", userId)
+
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: "123"},
@@ -99,7 +102,8 @@ func TestGetTodoByIdFailByNotExist(t *testing.T) {
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
 	todoId := util.GetNewTodoId()
-	c.Set("userId", userId)
+
+	controller.SetUserId(c, userId)
 
 	c.Params = []gin.Param{
 		{Key: "todoId", Value: todoId.String()},

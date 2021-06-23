@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_users "github.com/KenFront/gin-todo-list/src/controller/users"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -35,7 +36,7 @@ func TestPatchUserSuccess(t *testing.T) {
 
 	resForPatch := mock.GetResponse()
 	cRorPatch := mock.GetGinContext(resForPatch)
-	cRorPatch.Set("userId", userId)
+	controller.SetUserId(cRorPatch, userId)
 
 	payload := model.PatchUser{
 		Name: "123",

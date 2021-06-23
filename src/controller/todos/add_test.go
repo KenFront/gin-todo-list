@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	controller_todos "github.com/KenFront/gin-todo-list/src/controller/todos"
 	"github.com/KenFront/gin-todo-list/src/mock"
 	"github.com/KenFront/gin-todo-list/src/model"
@@ -19,7 +20,8 @@ func TestAddTodoSuccess(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
-	c.Set("userId", userId)
+
+	controller.SetUserId(c, userId)
 
 	fake := model.AddTodo{
 		Title:       "123",
@@ -49,7 +51,8 @@ func TestAddTodoFailBydMissingPayload(t *testing.T) {
 	res := mock.GetResponse()
 	c := mock.GetGinContext(res)
 	userId := util.GetNewUserId()
-	c.Set("userId", userId)
+
+	controller.SetUserId(c, userId)
 
 	fake := model.AddTodo{
 		Description: "456",
