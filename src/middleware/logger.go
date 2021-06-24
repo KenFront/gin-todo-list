@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"reflect"
 	"regexp"
 	"time"
 
+	"github.com/KenFront/gin-todo-list/src/controller"
 	"github.com/fatih/color"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -29,8 +31,15 @@ type logBase struct {
 
 func getPayload(c *gin.Context) string {
 	body := c.Request.Body
-	data, _ := ioutil.ReadAll(body)
+	if body == nil || reflect.TypeOf(body).String() != "io.nopCloser" {
+		return ""
+	}
+
+	data, err := ioutil.ReadAll(body)
 	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(data))
+	if err != nil {
+		return ""
+	}
 	return string(data)
 }
 
@@ -50,12 +59,12 @@ func hideSecurityPayload(val string) interface{} {
 
 	var data interface{}
 	if err := json.Unmarshal([]byte(result), &data); err != nil {
-		fmt.Println(err)
+		return map[string]string{}
 	}
 	return data
 }
 
-func customLogger(c *gin.Context) {
+func CustomLogger(c *gin.Context) {
 	startAt := time.Now()
 	path := c.Request.URL.Path
 	query := c.Request.URL.RawQuery
@@ -65,13 +74,7 @@ func customLogger(c *gin.Context) {
 
 	endAt := time.Now()
 
-	userIdByContext, isExist := c.Get("userId")
-	var userId uuid.UUID
-	if isExist {
-		userId = userIdByContext.(uuid.UUID)
-	} else {
-		userId = uuid.Nil
-	}
+	userId := controller.GetUserId(c)
 
 	errorMessages := c.Errors.Errors()
 
@@ -101,7 +104,7 @@ func customLogger(c *gin.Context) {
 }
 
 func UseCustomLogger(r *gin.Engine) {
-	r.Use(customLogger)
+	r.Use(CustomLogger)
 }
 
 func UseLogger(r *gin.Engine) {

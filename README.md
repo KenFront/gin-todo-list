@@ -80,7 +80,6 @@ make upAll
 
 ## Todolist
 
-- middleware unit test
 - diagram
 - Cron
 - Swagger
