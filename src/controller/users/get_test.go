@@ -16,13 +16,13 @@ import (
 func TestGetUserSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	userId := util.GetNewTodoId()
-	cRorAdd := mock.GetGinContext(resForAdd)
+	cForAdd := mock.GetGinContext(resForAdd)
 
 	gormDB := mock.GetMockGorm(t)
 
 	fake := mock.GetMockUser()
 
-	cRorAdd.Request = &http.Request{
+	cForAdd.Request = &http.Request{
 		Header: make(http.Header),
 		Body:   mock.GetRequsetBody(fake),
 	}
@@ -30,18 +30,18 @@ func TestGetUserSuccess(t *testing.T) {
 	controller_users.Add(controller_users.AddProps{
 		Db:           gormDB,
 		GetNewUserId: func() uuid.UUID { return userId },
-	})(cRorAdd)
+	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForGet := mock.GetResponse()
-	cRorGet := mock.GetGinContext(resForGet)
+	cForGet := mock.GetGinContext(resForGet)
 
-	controller.SetUserId(cRorGet, userId)
+	controller.SetUserId(cForGet, userId)
 
 	controller_users.Get(controller_users.GetProps{
 		Db: gormDB,
-	})(cRorGet)
+	})(cForGet)
 
 	var resBody SuccessUserAPIResponse
 	mock.GetResponseBody(resForGet.Body.Bytes(), &resBody)

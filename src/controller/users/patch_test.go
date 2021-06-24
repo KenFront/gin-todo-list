@@ -16,13 +16,13 @@ import (
 func TestPatchUserSuccess(t *testing.T) {
 	resForAdd := mock.GetResponse()
 	userId := util.GetNewTodoId()
-	cRorAdd := mock.GetGinContext(resForAdd)
+	cForAdd := mock.GetGinContext(resForAdd)
 
 	gormDB := mock.GetMockGorm(t)
 
 	fake := mock.GetMockUser()
 
-	cRorAdd.Request = &http.Request{
+	cForAdd.Request = &http.Request{
 		Header: make(http.Header),
 		Body:   mock.GetRequsetBody(fake),
 	}
@@ -30,26 +30,26 @@ func TestPatchUserSuccess(t *testing.T) {
 	controller_users.Add(controller_users.AddProps{
 		Db:           gormDB,
 		GetNewUserId: func() uuid.UUID { return userId },
-	})(cRorAdd)
+	})(cForAdd)
 
 	assert.Equal(t, http.StatusOK, resForAdd.Code)
 
 	resForPatch := mock.GetResponse()
-	cRorPatch := mock.GetGinContext(resForPatch)
-	controller.SetUserId(cRorPatch, userId)
+	cForPatch := mock.GetGinContext(resForPatch)
+	controller.SetUserId(cForPatch, userId)
 
 	payload := model.PatchUser{
 		Name: "123",
 	}
 
-	cRorPatch.Request = &http.Request{
+	cForPatch.Request = &http.Request{
 		Header: make(http.Header),
 		Body:   mock.GetRequsetBody(payload),
 	}
 
 	controller_users.Patch(controller_users.PatchProps{
 		Db: gormDB,
-	})(cRorPatch)
+	})(cForPatch)
 
 	var resBody SuccessUserAPIResponse
 	mock.GetResponseBody(resForPatch.Body.Bytes(), &resBody)
