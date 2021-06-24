@@ -24,8 +24,14 @@ func catchError(c *gin.Context) {
 		})
 	case util.IsSameType(r, errors.New("")):
 		err := r.(error)
-		fmt.Println(r)
 		if e := c.Error(err); e.Err != nil {
+			fmt.Println(e)
+		}
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": model.ERROR_UNKNOWN,
+		})
+	case r != nil:
+		if e := c.Error(errors.New(string(model.ERROR_UNKNOWN))); e.Err != nil {
 			fmt.Println(e)
 		}
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
