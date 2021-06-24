@@ -84,5 +84,5 @@ make upAll
 - Cron
 - Swagger
 - System log(MongoDb)
-- Nginx(Docker-compose)
+- Reverse Proxy(Nginx or Traefik)
 - UI(React)
