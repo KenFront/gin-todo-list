@@ -2,9 +2,14 @@ stateDiagram-v2
     state Gin {
         [*] --> GlobalMiddleware
         GlobalMiddleware --> PrivateMiddleware
-        GlobalMiddleware --> ControllerAuth
+        GlobalMiddleware --> SignIn
+        GlobalMiddleware --> SignOut
+        GlobalMiddleware --> AddUser
         ControllerTodos --> Todos
         ControllerUsers --> Users
+        SignIn --> Users
+        AddUser --> Users
+        SignOut
         state GlobalMiddleware {
             CustomLogger --> Logger
             Logger --> ErrorHandler
@@ -13,9 +18,10 @@ stateDiagram-v2
             AuthGuard --> ControllerTodos
             AuthGuard --> ControllerUsers
         }
-        state ControllerAuth {
-            SignIn --> Users
-            SignOut
+        state ControllerUsers {
+            DeleteUser
+            GetUser
+            PatchUser
         }
         state ControllerTodos {
             AddTodo
@@ -23,12 +29,6 @@ stateDiagram-v2
             GetTodoById
             GetTodoList
             PatchTodoById
-        }
-        state ControllerUsers {
-            AddUser
-            DeleteUser
-            GetUser
-            PatchUser
         }
     }
     state Migrate {
