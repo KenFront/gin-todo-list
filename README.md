@@ -67,14 +67,11 @@ make setDatabaseData
 # run first time or enviroment changed
 make setEnv
 
-# Launch all sever service
-make upAll
+# Launch database with migrate
+make upDB
 
-# To app root dictionary
-cd ./app
-
-# Run next.js web
-npm run dev
+# Launch go server
+make start
 ```
 
 ### Develop next.js web
@@ -86,11 +83,14 @@ make setDatabaseData
 # run first time or enviroment changed
 make setEnv
 
-# Launch database with migrate
-make upDB
+# Launch all sever service except web
+make upBackend
 
-# Launch go server
-make start
+# To app root dictionary
+cd ./app
+
+# Run next.js web
+npm run dev
 ```
 ## Deployment
 

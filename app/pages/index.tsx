@@ -9,6 +9,13 @@ export const getServerSideProps = CheckPageWithAuth;
 const signOut = async () => {
   const res = await fetch("/api/signout", {
     method: "POST",
+    cache: 'no-cache',
+    credentials: "same-origin",
+    headers: {
+      "content-type": "application/json",
+    },
+    redirect: 'follow',
+    referrer: 'no-referrer',
   }).then((res) => res.json());
   return res;
 };

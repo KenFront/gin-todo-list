@@ -7,7 +7,7 @@ import {
   Button,
   InputProps,
 } from "@chakra-ui/react";
-import { Formik, Form, Field, FormikState } from "Formik";
+import { Formik, Form, Field, FormikState } from "formik";
 
 import { CheckPageWithoutAuth } from "@/lib/auth/CheckPageWithoutAuth";
 import { FullPage } from "@/lib/component/FullPage";
@@ -20,6 +20,13 @@ const signIn = async (val: { account: string; password: string }) => {
     const res = await fetch("/api/signin", {
       body: JSON.stringify(val),
       method: "POST",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "content-type": "application/json",
+      },
+      redirect: "follow",
+      referrer: "no-referrer",
     }).then((res) => res.json());
     if (!!res.error) {
       throw res.error;

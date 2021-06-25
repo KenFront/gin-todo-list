@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   db:
-    container_name: PostgresDB
+    container_name: Postgres
     image: postgres:13.2-alpine
     restart: always
     environment:
@@ -14,7 +14,7 @@ services:
     volumes:
       - "${POSTGRES_PGDATA}:/var/lib/postgresql/data"
   migrate:
-    container_name: MigratePostgresDB
+    container_name: MigratePostgres
     image: migrate/migrate:v4.14.1
     restart: on-failure
     command: >-
@@ -27,11 +27,15 @@ services:
     depends_on:
       - db
   server:
-    container_name: GinServer
+    container_name: Gin
     image: "${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}"
     restart: always
     depends_on:
       - db
+  web:
+    container_name: Nextjs
+    image: "${WEB_IMAGE}:${WEB_IMAGE_VERSION}"
+    restart: always
   proxy:
     container_name: Nginx
     image: nginx:1.21-alpine
@@ -43,4 +47,5 @@ services:
     volumes:
       - "./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template"
     depends_on:
+      - web
       - server
