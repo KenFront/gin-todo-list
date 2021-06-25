@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"reflect"
 	"regexp"
 	"time"
 
@@ -31,7 +30,7 @@ type logBase struct {
 
 func getPayload(c *gin.Context) string {
 	body := c.Request.Body
-	if body == nil || reflect.TypeOf(body).String() != "io.nopCloser" {
+	if body == nil {
 		return ""
 	}
 
@@ -53,9 +52,10 @@ func getPrettyLog(log logBase) string {
 }
 
 func hideSecurityPayload(val string) interface{} {
-	securities := `\"(password|account)\": \".*\"`
+	securities := `"(password|account)":\s*".*?"`
 	re := regexp.MustCompile(securities)
 	result := re.ReplaceAllString(val, `"$1": "******"`)
+	fmt.Println(val)
 
 	var data interface{}
 	if err := json.Unmarshal([]byte(result), &data); err != nil {
