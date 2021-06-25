@@ -13,10 +13,7 @@ import {
 import { Formik, Form, Field, FormikState } from "Formik";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { req } = ctx;
-
-  const { cookies } = req;
-
+  const { cookies } = ctx.req;
   if (!!cookies.auth) {
     return { props: { status: "authorized" } };
   } else {
