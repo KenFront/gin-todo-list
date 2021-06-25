@@ -6,6 +6,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o ./app ./src/main.go
 
 FROM alpine:latest
 WORKDIR /root/
+ENV GIN_MODE=release
 COPY --from=builder ./app ./app
 COPY --from=builder ./.env ./.env
 CMD ["./app"]
