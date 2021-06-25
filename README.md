@@ -10,6 +10,11 @@ Basic gin for Todo list
 - Go: v1.16.5
 - golangci-lint: v1.41.0
 
+## Service Flow Chart
+<div align="center">
+  <img src="./flowChart/services.svg" width="100%" alt="service flow chart">
+</div>
+
 ## Command
 
 ```bash
@@ -45,6 +50,9 @@ make testAll
 
 # Run golangci-lint
 make lint
+
+# Generate services flow chart
+make generateFlowChart FLOW_CHART=services
 ```
 
 ## Development

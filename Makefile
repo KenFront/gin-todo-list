@@ -22,3 +22,5 @@ testAll:
 	go clean -testcache && $(TEST_COMMAND)
 lint:
 	golangci-lint run ./src/...
+generateFlowChart:
+	docker run --rm -v ${PWD}/flowChart:/home/node/data matthewfeickert/mermaid-cli:latest -i $(FLOW_CHART).mmd -o $(FLOW_CHART).svg
