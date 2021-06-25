@@ -57,6 +57,27 @@ make generateFlowChart FLOW_CHART=servers
 
 ## Development
 
+### Develop gin server
+
+```bash
+# run first time
+make setDatabaseData
+
+# run first time or enviroment changed
+make setEnv
+
+# Launch all sever service
+make upAll
+
+# To app root dictionary
+cd ./app
+
+# Run next.js web
+npm run dev
+```
+
+### Develop next.js web
+
 ```bash
 # run first time
 make setDatabaseData
@@ -70,7 +91,6 @@ make upDB
 # Launch go server
 make start
 ```
-
 ## Deployment
 
 ```bash
