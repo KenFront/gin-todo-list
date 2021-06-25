@@ -27,7 +27,14 @@ func GetById(p GetByIdProps) gin.HandlerFunc {
 			return
 		}
 
-		userId := controller.GetUserId(c)
+		userId, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 
 		var todo model.Todo
 

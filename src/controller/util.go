@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"net/http"
 
 	"github.com/KenFront/gin-todo-list/src/model"
 	"github.com/gin-gonic/gin"
@@ -17,19 +16,15 @@ func SetUserId(c *gin.Context, id uuid.UUID) {
 	c.Set(userIdKey, id)
 }
 
-func GetUserId(c *gin.Context) uuid.UUID {
+func GetUserId(c *gin.Context) (uuid.UUID, error) {
 	userId, isExist := c.Get(userIdKey)
 	if !isExist {
-		ApiOnError(&model.ApiError{
-			StatusCode: http.StatusBadRequest,
-			ErrorType:  model.ERROR_SIGN_IN_FAILED,
-			Error:      errors.New(string(model.ERROR_SIGN_IN_FAILED)),
-		})
+		return uuid.Nil, errors.New(string(model.ERROR_SIGN_IN_FAILED))
 	}
 
 	id := userId.(uuid.UUID)
 
-	return id
+	return id, nil
 }
 
 func ApiOnSuccess(c *gin.Context, res *model.ApiSuccess) {

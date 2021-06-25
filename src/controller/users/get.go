@@ -17,7 +17,14 @@ func Get(p GetProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
 
-		id := controller.GetUserId(c)
+		id, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 
 		if err := p.Db.First(&user, "id = ?", id).Error; err != nil {
 			controller.ApiOnError(&model.ApiError{

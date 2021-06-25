@@ -27,8 +27,14 @@ func DeleteById(p DeleteProps) gin.HandlerFunc {
 			return
 		}
 
-		userId := controller.GetUserId(c)
-
+		userId, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 		var todo model.Todo
 
 		if err := p.Db.First(&todo, "id = ? AND user_id = ?", uri.TodoId, userId).Error; err != nil {

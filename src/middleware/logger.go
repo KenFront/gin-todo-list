@@ -74,7 +74,7 @@ func CustomLogger(c *gin.Context) {
 
 	endAt := time.Now()
 
-	userId := controller.GetUserId(c)
+	userId, _ := controller.GetUserId(c)
 
 	errorMessages := c.Errors.Errors()
 

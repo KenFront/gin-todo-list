@@ -26,7 +26,14 @@ func Add(p AddProps) gin.HandlerFunc {
 			})
 		}
 
-		userId := controller.GetUserId(c)
+		userId, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 
 		id := p.GetNewTodoId()
 

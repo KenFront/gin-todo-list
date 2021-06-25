@@ -17,7 +17,14 @@ func Delete(p DeleteProps) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user model.User
 
-		userId := controller.GetUserId(c)
+		userId, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 
 		if err := p.Db.First(&user, "id = ?", userId).Error; err != nil {
 			controller.ApiOnError(&model.ApiError{

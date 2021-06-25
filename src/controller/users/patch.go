@@ -33,7 +33,14 @@ func Patch(p PatchProps) gin.HandlerFunc {
 			})
 		}
 
-		id := controller.GetUserId(c)
+		id, err := controller.GetUserId(c)
+		if err != nil {
+			controller.ApiOnError(&model.ApiError{
+				StatusCode: http.StatusBadRequest,
+				ErrorType:  model.ERROR_SIGN_IN_FAILED,
+				Error:      err,
+			})
+		}
 
 		var user model.User
 
