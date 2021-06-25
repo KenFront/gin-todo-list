@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/KenFront/gin-todo-list/src/config"
@@ -30,7 +29,7 @@ func main() {
 	route.UseUser(r)
 	route.UseTodos(r)
 
-	if err := r.Run(fmt.Sprintf(":%s", config.GetEnv().SERVER_PORT)); err != nil {
+	if err := r.Run(":80"); err != nil {
 		log.Fatal("Unable to start:", err)
 	}
 }

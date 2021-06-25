@@ -8,7 +8,6 @@ import (
 )
 
 type envConfig struct {
-	SERVER_PORT       string
 	DOMAIN            string
 	POSTGRES_HOST     string
 	POSTGRES_USER     string
@@ -25,7 +24,6 @@ var config *envConfig
 func GetEnv() *envConfig {
 	if config == nil {
 		config = &envConfig{
-			SERVER_PORT:       os.Getenv("SERVER_PORT"),
 			DOMAIN:            os.Getenv("DOMAIN"),
 			POSTGRES_HOST:     os.Getenv("POSTGRES_HOST"),
 			POSTGRES_USER:     os.Getenv("POSTGRES_USER"),
