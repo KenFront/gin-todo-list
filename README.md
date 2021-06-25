@@ -12,7 +12,7 @@ Basic gin for Todo list
 
 ## Service Flow Chart
 <div align="center">
-  <img src="./flowChart/services.svg" width="100%" alt="service flow chart">
+  <img src="./flowChart/servers.svg" width="100%" alt="service flow chart">
 </div>
 
 ## Command
@@ -51,8 +51,8 @@ make testAll
 # Run golangci-lint
 make lint
 
-# Generate services flow chart
-make generateFlowChart FLOW_CHART=services
+# Generate servers flow chart
+make generateFlowChart FLOW_CHART=servers
 ```
 
 ## Development
