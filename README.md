@@ -9,6 +9,7 @@ Basic gin for Todo list
 - Docker: v20.10.7
 - Go: v1.16.5
 - golangci-lint: v1.41.0
+- Node.js: v14.17.1
 
 ## Service Flow Chart
 <div align="center">
