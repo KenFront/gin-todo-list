@@ -43,7 +43,9 @@ func TestAuthGuardSuccess(t *testing.T) {
 		GetUserIdByToken: mock.UtilGetUserIdByToken(userId),
 	})(c)
 
-	assert.Equal(t, userId, controller.GetUserId(c))
+	id, _ := controller.GetUserId(c)
+
+	assert.Equal(t, userId, id)
 }
 
 func TestAuthGuardFailByParseUserIdFailed(t *testing.T) {

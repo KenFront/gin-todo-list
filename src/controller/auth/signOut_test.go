@@ -22,6 +22,12 @@ func TestSignOutSuccess(t *testing.T) {
 	cookieProperties := strings.Split(cookie, "; ")
 
 	assert.Equal(t, http.StatusOK, res.Code)
-	assert.Equal(t, "auth=DELETED", cookieProperties[0])
-	assert.Equal(t, "Max-Age=0", cookieProperties[2])
+	for _, v := range cookieProperties {
+		switch {
+		case strings.HasPrefix(v, "auth"):
+			assert.Equal(t, "auth=DELETED", v)
+		case strings.HasPrefix(v, "Max-Age"):
+			assert.Equal(t, "Max-Age=0", v)
+		}
+	}
 }
