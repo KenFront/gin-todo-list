@@ -28,7 +28,7 @@ services:
       - db
   server:
     container_name: GinServer
-    image: kenfront/gin-todolist
+    image: "${SERVER_IMAGE}:${SERVER_IMAGE_VERSION}"
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always

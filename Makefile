@@ -1,3 +1,7 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
 TEST_COMMAND= GIN_MODE=test go test -v -cover ./src/controller/... ./src/middleware/...
 
 start:
@@ -9,7 +13,7 @@ setEnv:
 setDatabaseData:
 	mkdir ./db/data
 build:
-	docker build -t kenfront/gin-todolist:latest .
+	docker build -t ${SERVER_IMAGE}:${SERVER_IMAGE_VERSION} .
 upDB:
 	docker compose up db migrate
 upAll:
