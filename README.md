@@ -88,9 +88,8 @@ make upAll
 
 ## Todolist
 
-- diagram
-- Cron
-- Swagger
-- System log(MongoDb)
 - Reverse Proxy(Nginx or Traefik)
 - UI(React)
+- Cron
+- System log(MongoDb)
+- Swagger
