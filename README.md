@@ -34,6 +34,9 @@ make setDatabaseData
 # Build go server image
 make build
 
+# Build next.js image
+make buildApp
+
 # Launch database with migrate
 make upDB
 
@@ -83,6 +86,12 @@ make setDatabaseData
 # run first time or enviroment changed
 make setEnv
 
+# Build go server image
+make build
+
+# Build next.js image
+make buildApp
+
 # Launch all sever service
 make upAll
 
@@ -92,11 +101,20 @@ cd ./app
 # Run next.js web
 npm run dev
 ```
-## Deployment
+## Prevview
 
 ```bash
+# run first time
+make setDatabaseData
+
+# run first time or enviroment changed
+make setEnv
+
 # Build go server image
 make build
+
+# Build next.js image
+make buildApp
 
 # Launch all services
 make upAll
