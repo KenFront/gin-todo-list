@@ -17,8 +17,6 @@ const ErrorMsg = (code: number) => {
   switch (true) {
     case code >= 500:
       return "Server is not working now";
-    case code === 404:
-      return "Page not found";
     case code >= 400:
       return "Something wrong";
   }
