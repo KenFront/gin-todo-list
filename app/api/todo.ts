@@ -19,3 +19,13 @@ export const addTodo = async (val: { title: string; description: string }) => {
 
   return res as ApiOnSuccess<Todo>;
 };
+
+
+
+export const getTodos = async () => {
+  const res = await Request({
+    path: "/api/todos",
+  });
+
+  return res as ApiOnSuccess<Todo[]>;
+};
