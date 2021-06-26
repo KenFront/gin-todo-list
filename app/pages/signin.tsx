@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
@@ -9,6 +9,9 @@ import {
   InputProps,
   InputGroup,
   InputRightElement,
+  Stack,
+  Spacer,
+  Link,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
@@ -22,6 +25,8 @@ import { Responsive } from "@/lib/component/Responsive";
 import { Header } from "@/lib/component/Header";
 import { useAppToast } from "@/lib/hook/useAppToast";
 import { useAsync } from "@/lib/hook/useAsync";
+import { useChangePage } from "@/lib/hook/useChangePage";
+import { useRedirectWithAuth } from "@/lib/route/useRedirectWithAuth";
 
 export const getServerSideProps = CheckPageWithoutAuth;
 
@@ -47,16 +52,24 @@ function validatePassword() {
 }
 
 const SignInPage = () => {
+  const { changePath } = useChangePage();
   const { toastError } = useAppToast();
   const { status, error, execute } = useAsync(signIn);
   const [showPs, setShowPs] = useState(false);
   const toggleViewPs = () => setShowPs(!showPs);
+  const { redirect } = useRedirectWithAuth();
+
+  const registerPath = "/register";
+  const toRigisterPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
+    e.preventDefault();
+    changePath(registerPath);
+  };
 
   useEffect(() => {
     if (status === "success") {
-      window.location.reload();
+      redirect();
     }
-  }, [status]);
+  }, [status, redirect]);
 
   useEffect(() => {
     if (status === "error" && error) {
@@ -134,14 +147,19 @@ const SignInPage = () => {
                     </FormControl>
                   )}
                 </Field>
-                <Button
-                  mt={4}
-                  colorScheme="teal"
-                  isLoading={status === "loading" || status === "success"}
-                  type="submit"
-                >
-                  Submit
-                </Button>
+                <Stack mt={4} direction="row" spacing={4} align="center">
+                  <Button
+                    colorScheme="teal"
+                    isLoading={status === "loading" || status === "success"}
+                    type="submit"
+                  >
+                    Submit
+                  </Button>
+                  <Spacer />
+                  <Link href={registerPath} onClick={toRigisterPage}>
+                    Register
+                  </Link>
+                </Stack>
               </Form>
             )}
           </Formik>

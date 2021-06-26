@@ -5,10 +5,12 @@ import { FullPage } from "@/lib/component/FullPage";
 import { Header } from "@/lib/component/Header";
 import { Responsive } from "@/lib/component/Responsive";
 import { signOut } from "@/lib/API/sign";
+import { useRedirectWithoutAuth } from "@/lib/route/useRedirectWithoutAuth";
 
 export const getServerSideProps = CheckPageWithAuth;
 
 const IndexPage = () => {
+  const { redirect } = useRedirectWithoutAuth();
   return (
     <FullPage>
       <Header title="Index" />
@@ -19,7 +21,7 @@ const IndexPage = () => {
           onClick={async () => {
             try {
               await signOut();
-              window.location.reload();
+              redirect();
             } catch (e) {
               console.error(e);
             }
