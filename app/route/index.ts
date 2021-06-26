@@ -2,5 +2,6 @@ export enum ROUTE {
   INDEX = "/",
   SIGN_IN = "/signin",
   REGISTER = "/register",
-  TODOS = "/todos"
+  TODOS = "/todos",
+  TODO_ADD = "/todos/add",
 }

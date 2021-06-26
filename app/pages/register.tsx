@@ -40,6 +40,7 @@ const IndexPage = () => {
       registerAsync.reset();
     }
   }, [registerAsync, changePath, toastSuccess]);
+
   useEffect(() => {
     if (registerAsync.status === "error") {
       RequestErrorHandler({
