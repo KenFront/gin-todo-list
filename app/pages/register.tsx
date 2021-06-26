@@ -24,12 +24,12 @@ import { register } from "@/api/user";
 import { ROUTE } from "@/route";
 
 const IndexPage = () => {
-  const registerAsync = useAsync(register);
+  const { status, result, error, execute } = useAsync(register);
   const { toastSuccess, toastError } = useAppToast();
   const { changePath } = useChangePage();
 
   useEffect(() => {
-    if (registerAsync.status === "success") {
+    if (result) {
       toastSuccess({
         title: "Success",
         description: "Register successfully",
@@ -37,23 +37,21 @@ const IndexPage = () => {
           changePath(ROUTE.SIGN_IN);
         },
       });
-      registerAsync.reset();
     }
-  }, [registerAsync, changePath, toastSuccess]);
+  }, [result, changePath, toastSuccess]);
 
   useEffect(() => {
-    if (registerAsync.status === "error") {
+    if (error) {
       RequestErrorHandler({
-        e: registerAsync.error,
+        e: error,
         callback: (str) =>
           toastError({
             title: "Error",
             description: str,
           }),
       });
-      registerAsync.reset();
     }
-  }, [registerAsync, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
@@ -69,7 +67,7 @@ const IndexPage = () => {
               email: "",
             }}
             onSubmit={(values) => {
-              registerAsync.execute({
+              execute({
                 name: values.name,
                 account: values.account,
                 password: values.password,
@@ -119,8 +117,8 @@ const IndexPage = () => {
                   <Button
                     colorScheme="teal"
                     isLoading={
-                      registerAsync.status === "loading" ||
-                      registerAsync.status === "success"
+                      status === "loading" ||
+                      status === "success"
                     }
                     type="submit"
                   >

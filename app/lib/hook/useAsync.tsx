@@ -2,40 +2,10 @@ import { useState, useRef, useCallback, DependencyList } from "react";
 
 export type AsyncStatus = "idle" | "loading" | "success" | "error";
 
-type State<T, K extends Array<unknown>> =
-  | {
-      status: "idle";
-      result: null;
-      error: null;
-      execute: (...arg: K) => Promise<void>;
-      reset: () => void;
-    }
-  | {
-      status: "loading";
-      result: null;
-      error: null;
-      execute: (...arg: K) => Promise<void>;
-      reset: () => void;
-    }
-  | {
-      status: "success";
-      result: T;
-      error: null;
-      execute: (...arg: K) => Promise<void>;
-      reset: () => void;
-    }
-  | {
-      status: "error";
-      result: null;
-      error: Error;
-      execute: (...arg: K) => Promise<void>;
-      reset: () => void;
-    };
-
 export const useAsync = <T, K extends Array<unknown>>(
   fn: (...arg: K) => Promise<T>,
   deps: DependencyList = []
-): State<T, K> => {
+) => {
   const [status, setStatus] = useState<AsyncStatus>("idle");
   const [result, setResult] = useState<T>();
   const [error, setError] = useState<Error>();
@@ -68,40 +38,10 @@ export const useAsync = <T, K extends Array<unknown>>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
-  if (status === "idle") {
-    return {
-      status,
-      result: null,
-      error: null,
-      execute,
-      reset,
-    };
-  }
-
-  if (typeof result != "undefined") {
-    return {
-      status: "success",
-      result,
-      error: null,
-      execute,
-      reset,
-    };
-  }
-
-  if (typeof error != "undefined") {
-    return {
-      status: "error",
-      result: null,
-      error,
-      execute,
-      reset,
-    };
-  }
-
   return {
-    status: "loading",
-    result: null,
-    error: null,
+    status,
+    result,
+    error,
     execute,
     reset,
   };

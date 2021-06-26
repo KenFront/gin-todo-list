@@ -20,32 +20,30 @@ import { isNotEmpty } from "@/validator/isNotEmpty";
 export const getServerSideProps = CheckPageWithAuth;
 
 const TodoAddPage = () => {
-  const addTodoAsync = useAsync(addTodo);
+  const { status, result, error, execute } = useAsync(addTodo);
   const { toastSuccess, toastError } = useAppToast();
 
   useEffect(() => {
-    if (addTodoAsync.status === "success") {
+    if (result) {
       toastSuccess({
         title: "Success",
         description: "Add todo successfully",
       });
-      addTodoAsync.reset();
     }
-  }, [addTodoAsync, toastSuccess]);
+  }, [result, toastSuccess]);
 
   useEffect(() => {
-    if (addTodoAsync.status === "error") {
+    if (error) {
       RequestErrorHandler({
-        e: addTodoAsync.error,
+        e: error,
         callback: (str) =>
           toastError({
             title: "Error",
             description: str,
           }),
       });
-      addTodoAsync.reset();
     }
-  }, [addTodoAsync, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
@@ -55,7 +53,7 @@ const TodoAddPage = () => {
           <Formik
             initialValues={{ title: "", description: "" }}
             onSubmit={async(values, action) => {
-              await addTodoAsync.execute(values);
+              await execute(values);
               action.resetForm();
             }}
           >
@@ -76,8 +74,8 @@ const TodoAddPage = () => {
                 <Button
                   colorScheme="teal"
                   isLoading={
-                    addTodoAsync.status === "loading" ||
-                    addTodoAsync.status === "success"
+                    status === "loading" ||
+                    status === "success"
                   }
                   type="submit"
                 >

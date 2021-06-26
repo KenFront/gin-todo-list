@@ -28,7 +28,7 @@ export const getServerSideProps = CheckPageWithoutAuth;
 const SignInPage = () => {
   const { changePath } = useChangePage();
   const { toastError } = useAppToast();
-  const signInAsync = useAsync(signIn);
+  const { status, result, error, execute } = useAsync(signIn);
   const { redirect } = useRedirectWithAuth();
 
   const toRigisterPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
@@ -37,24 +37,23 @@ const SignInPage = () => {
   };
 
   useEffect(() => {
-    if (signInAsync.status === "success") {
+    if (result) {
       redirect();
     }
-  }, [signInAsync, redirect]);
+  }, [result, redirect]);
 
   useEffect(() => {
-    if (signInAsync.status === "error") {
+    if (error) {
       RequestErrorHandler({
-        e: signInAsync.error,
+        e: error,
         callback: (str) =>
           toastError({
             title: "Error",
             description: str,
           }),
       });
-      signInAsync.reset()
     }
-  }, [signInAsync, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
@@ -64,7 +63,7 @@ const SignInPage = () => {
           <Formik
             initialValues={{ account: "", password: "" }}
             onSubmit={(values) => {
-              signInAsync.execute(values);
+              execute(values);
             }}
           >
             <Form>
@@ -84,8 +83,8 @@ const SignInPage = () => {
                 <Button
                   colorScheme="teal"
                   isLoading={
-                    signInAsync.status === "loading" ||
-                    signInAsync.status === "success"
+                    status === "loading" ||
+                    status === "success"
                   }
                   type="submit"
                 >
