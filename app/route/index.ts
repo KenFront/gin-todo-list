@@ -4,4 +4,5 @@ export enum ROUTE {
   REGISTER = "/register",
   TODOS = "/todos",
   TODO_ADD = "/todos/add",
+  TODO_DETAIL = "/todos/:id",
 }

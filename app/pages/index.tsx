@@ -24,7 +24,7 @@ const IndexPage = () => {
 
   const toTodoListPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
-    changePath(ROUTE.TODOS);
+    changePath({ path: ROUTE.TODOS });
   };
 
   return (

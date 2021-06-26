@@ -1,0 +1,7 @@
+.ReactVirtualized__Table__headerRow {
+  text-transform: initial;
+}
+
+.ReactVirtualized__Table__row:hover {
+  background-color: var(--chakra-ring-color);
+}

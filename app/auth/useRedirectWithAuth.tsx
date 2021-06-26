@@ -4,8 +4,8 @@ import { useChangePage } from "@/lib/hook/useChangePage";
 export const useRedirectWithAuth = () => {
   const { changePath } = useChangePage();
   return {
-      redirect: () => {
-        changePath(ROUTE.INDEX)
-      }
-  }
+    redirect: () => {
+      changePath({ path: ROUTE.INDEX });
+    },
+  };
 };

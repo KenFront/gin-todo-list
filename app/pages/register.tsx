@@ -34,7 +34,7 @@ const IndexPage = () => {
         title: "Success",
         description: "Register successfully",
         onCloseComplete: () => {
-          changePath(ROUTE.SIGN_IN);
+          changePath({ path: ROUTE.SIGN_IN });
         },
       });
     }
@@ -116,10 +116,7 @@ const IndexPage = () => {
                 >
                   <Button
                     colorScheme="teal"
-                    isLoading={
-                      status === "loading" ||
-                      status === "success"
-                    }
+                    isLoading={status === "loading" || status === "success"}
                     type="submit"
                   >
                     Submit

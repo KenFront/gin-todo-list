@@ -24,7 +24,11 @@ const TodolistPage = () => {
   const { changePath } = useChangePage();
 
   const toTodoAddPage = () => {
-    changePath(ROUTE.TODO_ADD);
+    changePath({ path: ROUTE.TODO_ADD });
+  };
+
+  const toTodoDetailPage = (id: string) => {
+    changePath({ path: ROUTE.TODO_DETAIL, param: { id } });
   };
 
   const colW = useMemo(() => [100, 200, 100, 250, 250], []);
@@ -56,6 +60,10 @@ const TodolistPage = () => {
             rowHeight={60}
             rowCount={result.data.length}
             rowGetter={({ index }) => result.data[index]}
+            onRowClick={({ index }) => toTodoDetailPage(result.data[index].id)}
+            gridStyle={{
+              cursor: "pointer",
+            }}
           >
             <Column width={colW[0]} label="Title" dataKey="title" />
             <Column width={colW[1]} label="Description" dataKey="description" />

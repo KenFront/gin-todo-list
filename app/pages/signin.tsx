@@ -33,7 +33,7 @@ const SignInPage = () => {
 
   const toRigisterPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
-    changePath(ROUTE.REGISTER);
+    changePath({ path: ROUTE.REGISTER });
   };
 
   useEffect(() => {
@@ -82,10 +82,7 @@ const SignInPage = () => {
               <Stack mt={4} direction="row" spacing={4} align="center">
                 <Button
                   colorScheme="teal"
-                  isLoading={
-                    status === "loading" ||
-                    status === "success"
-                  }
+                  isLoading={status === "loading" || status === "success"}
                   type="submit"
                 >
                   Submit
