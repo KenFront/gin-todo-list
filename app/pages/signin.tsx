@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Box,
   FormControl,
@@ -6,36 +7,21 @@ import {
   FormErrorMessage,
   Button,
   InputProps,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+
 import { Formik, Form, Field, FormikState } from "formik";
 
 import { CheckPageWithoutAuth } from "@/lib/auth/CheckPageWithoutAuth";
+import { signIn } from "@/lib/API/sign";
+import { RequestErrorHandler } from "@/lib/request";
 import { FullPage } from "@/lib/component/FullPage";
 import { useAppToast } from "@/lib/hook/useAppToast";
+import { useAsync } from "@/lib/hook/useAsync";
 
 export const getServerSideProps = CheckPageWithoutAuth;
-
-const signIn = async (val: { account: string; password: string }) => {
-  try {
-    const res = await fetch("/api/signin", {
-      body: JSON.stringify(val),
-      method: "POST",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "content-type": "application/json",
-      },
-      redirect: "follow",
-      referrer: "no-referrer",
-    }).then((res) => res.json());
-    if (!!res.error) {
-      throw res.error;
-    }
-    return res;
-  } catch (error) {
-    throw error;
-  }
-};
 
 function validateSignIn({ name, value }: { name: string; value: string }) {
   switch (true) {
@@ -59,35 +45,40 @@ function validatePassword() {
 }
 
 const IndexPage = () => {
-  const { toastSuccess, toastError } = useAppToast();
+  const { toastError } = useAppToast();
+  const { status, error, execute } = useAsync(signIn);
+  const [showPs, setShowPs] = useState(false);
+  const toggleViewPs = () => setShowPs(!showPs);
+
+  useEffect(() => {
+    if (status === "success") {
+      window.location.reload();
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (status === "error" && error) {
+      RequestErrorHandler({
+        e: error,
+        callback: (str) =>
+          toastError({
+            title: "Success",
+            description: str,
+          }),
+      });
+    }
+  }, [status, error, toastError]);
 
   return (
     <FullPage>
       <Box w="480px" p={4}>
         <Formik
           initialValues={{ account: "", password: "" }}
-          onSubmit={async (values, actions) => {
-            try {
-              const res = await signIn(values);
-              toastSuccess({
-                title: "Success",
-                description: res.data,
-                onCloseComplete: () => {
-                  window.location.reload();
-                },
-              });
-            } catch (error) {
-              console.error(error);
-              toastError({
-                title: "Error",
-                description: error,
-              });
-            } finally {
-              actions.setSubmitting(false);
-            }
+          onSubmit={(values) => {
+            execute(values);
           }}
         >
-          {(props) => (
+          {() => (
             <Form>
               <Field name="account" validate={validateAccount()}>
                 {({
@@ -98,7 +89,7 @@ const IndexPage = () => {
                   form: FormikState<{ account: string }>;
                 }) => (
                   <FormControl
-                    isInvalid={!!form.errors.account && !!form.touched.account}
+                    isInvalid={!!form.errors.account && form.touched.account}
                   >
                     <FormLabel htmlFor="account">Account</FormLabel>
                     <Input {...field} id="account" placeholder="account" />
@@ -115,12 +106,22 @@ const IndexPage = () => {
                   form: FormikState<{ password: string }>;
                 }) => (
                   <FormControl
-                    isInvalid={
-                      !!form.errors.password && !!form.touched.password
-                    }
+                    isInvalid={!!form.errors.password && form.touched.password}
                   >
                     <FormLabel htmlFor="password">Password</FormLabel>
-                    <Input {...field} id="password" placeholder="password" />
+                    <InputGroup size="md">
+                      <Input
+                        {...field}
+                        type={showPs ? "text" : "password"}
+                        id="password"
+                        placeholder="password"
+                      />
+                      <InputRightElement width="4.5rem">
+                        <Button h="1.75rem" size="sm" onClick={toggleViewPs}>
+                          {showPs ? <ViewIcon /> : <ViewOffIcon />}
+                        </Button>
+                      </InputRightElement>
+                    </InputGroup>
                     <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
@@ -128,7 +129,7 @@ const IndexPage = () => {
               <Button
                 mt={4}
                 colorScheme="teal"
-                isLoading={props.isSubmitting}
+                isLoading={status === "loading" || status === "success"}
                 type="submit"
               >
                 Submit

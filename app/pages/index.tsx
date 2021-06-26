@@ -2,40 +2,23 @@ import { Button } from "@chakra-ui/react";
 
 import { CheckPageWithAuth } from "@/lib/auth/CheckPageWithAuth";
 import { FullPage } from "@/lib/component/FullPage";
-import { useAppToast } from "@/lib/hook/useAppToast";
+import { signOut } from "@/lib/API/sign";
 
 export const getServerSideProps = CheckPageWithAuth;
 
-const signOut = async () => {
-  const res = await fetch("/api/signout", {
-    method: "POST",
-    cache: 'no-cache',
-    credentials: "same-origin",
-    headers: {
-      "content-type": "application/json",
-    },
-    redirect: 'follow',
-    referrer: 'no-referrer',
-  }).then((res) => res.json());
-  return res;
-};
-
 const IndexPage = () => {
-  const { toastSuccess } = useAppToast();
   return (
     <FullPage>
       <Button
         mt={4}
         colorScheme="teal"
         onClick={async () => {
-          const res = await signOut();
-          toastSuccess({
-            title: "Success",
-            description: res.data,
-            onCloseComplete: () => {
-              window.location.reload();
-            },
-          });
+          try {
+            await signOut();
+            window.location.reload();
+          } catch (e) {
+            console.error(e);
+          }
         }}
       >
         Sign out
