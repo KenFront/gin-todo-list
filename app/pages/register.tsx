@@ -6,7 +6,7 @@ const IndexPage = () => {
   return (
     <FullPage>
       <Header title="Register" />
-      <Responsive>
+      <Responsive align="center" justify="center">
         <div>Hello World</div>
       </Responsive>
     </FullPage>

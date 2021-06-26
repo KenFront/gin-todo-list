@@ -1,62 +1,33 @@
-import { MouseEventHandler, useEffect, useState } from "react";
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Button,
-  InputProps,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  Spacer,
-  Link,
-} from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { MouseEventHandler, useEffect } from "react";
+import { Box, Button, Stack, Spacer, Link } from "@chakra-ui/react";
 
-import { Formik, Form, Field, FormikState } from "formik";
+import { Formik, Form } from "formik";
 
 import { CheckPageWithoutAuth } from "@/auth/CheckPageWithoutAuth";
-import { signIn } from "@/api/sign";
-import { RequestErrorHandler } from "@/lib/request";
+import { useRedirectWithAuth } from "@/auth/useRedirectWithAuth";
+
 import { FullPage } from "@/lib/component/FullPage";
 import { Responsive } from "@/lib/component/Responsive";
 import { Header } from "@/lib/component/Header";
+import { TextInput } from "@/lib/component/formik/TextInput";
+import { PasswordInput } from "@/lib/component/formik/PasswordInput";
+
 import { useAppToast } from "@/lib/hook/useAppToast";
 import { useAsync } from "@/lib/hook/useAsync";
 import { useChangePage } from "@/lib/hook/useChangePage";
-import { useRedirectWithAuth } from "@/auth/useRedirectWithAuth";
+
+import { validateAccount } from "@/validator/account";
+import { validatePassword } from "@/validator/password";
+
+import { RequestErrorHandler } from "@/lib/request";
+import { signIn } from "@/api/sign";
 
 export const getServerSideProps = CheckPageWithoutAuth;
-
-function validateSignIn({ name, value }: { name: string; value: string }) {
-  switch (true) {
-    case !value:
-      return `${name} is required`;
-    case value.length < 3:
-      return `${name} is too short`;
-    case value.length > 100:
-      return `${name} is too long`;
-    default:
-      return "";
-  }
-}
-
-function validateAccount() {
-  return (value: string) => validateSignIn({ name: "Acconut", value });
-}
-
-function validatePassword() {
-  return (value: string) => validateSignIn({ name: "password", value });
-}
 
 const SignInPage = () => {
   const { changePath } = useChangePage();
   const { toastError } = useAppToast();
   const signInAsync = useAsync(signIn);
-  const [showPs, setShowPs] = useState(false);
-  const toggleViewPs = () => setShowPs(!showPs);
   const { redirect } = useRedirectWithAuth();
 
   const registerPath = "/register";
@@ -95,73 +66,34 @@ const SignInPage = () => {
               signInAsync.execute(values);
             }}
           >
-            {() => (
-              <Form>
-                <Field name="account" validate={validateAccount()}>
-                  {({
-                    field,
-                    form,
-                  }: {
-                    field: InputProps;
-                    form: FormikState<{ account: string }>;
-                  }) => (
-                    <FormControl
-                      isInvalid={!!form.errors.account && form.touched.account}
-                    >
-                      <FormLabel htmlFor="account">Account</FormLabel>
-                      <Input {...field} id="account" placeholder="account" />
-                      <FormErrorMessage>{form.errors.account}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-                <Field name="password" validate={validatePassword()}>
-                  {({
-                    field,
-                    form,
-                  }: {
-                    field: InputProps;
-                    form: FormikState<{ password: string }>;
-                  }) => (
-                    <FormControl
-                      isInvalid={
-                        !!form.errors.password && form.touched.password
-                      }
-                    >
-                      <FormLabel mt={4} htmlFor="password">Password</FormLabel>
-                      <InputGroup size="md">
-                        <Input
-                          {...field}
-                          type={showPs ? "text" : "password"}
-                          id="password"
-                          placeholder="password"
-                        />
-                        <InputRightElement width="4.5rem">
-                          <Button h="1.75rem" size="sm" onClick={toggleViewPs}>
-                            {showPs ? <ViewIcon /> : <ViewOffIcon />}
-                          </Button>
-                        </InputRightElement>
-                      </InputGroup>
-                      <FormErrorMessage>
-                        {form.errors.password}
-                      </FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-                <Stack mt={4} direction="row" spacing={4} align="center">
-                  <Button
-                    colorScheme="teal"
-                    isLoading={signInAsync.status === "loading" || signInAsync.status === "success"}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
-                  <Spacer />
-                  <Link href={registerPath} onClick={toRigisterPage}>
-                    Register
-                  </Link>
-                </Stack>
-              </Form>
-            )}
+            <Form>
+              <TextInput
+                name="account"
+                validate={validateAccount}
+                placeholder="account"
+              />
+              <PasswordInput
+                name="password"
+                validate={validatePassword}
+                placeholder="password"
+              />
+              <Stack mt={4} direction="row" spacing={4} align="center">
+                <Button
+                  colorScheme="teal"
+                  isLoading={
+                    signInAsync.status === "loading" ||
+                    signInAsync.status === "success"
+                  }
+                  type="submit"
+                >
+                  Submit
+                </Button>
+                <Spacer />
+                <Link href={registerPath} onClick={toRigisterPage}>
+                  Register
+                </Link>
+              </Stack>
+            </Form>
           </Formik>
         </Box>
       </Responsive>
