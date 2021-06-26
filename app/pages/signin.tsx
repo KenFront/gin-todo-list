@@ -150,7 +150,7 @@ const SignInPage = () => {
                 <Stack mt={4} direction="row" spacing={4} align="center">
                   <Button
                     colorScheme="teal"
-                    isLoading={status === "loading" || status === "success"}
+                    isLoading={signInAsync.status === "loading" || signInAsync.status === "success"}
                     type="submit"
                   >
                     Submit
