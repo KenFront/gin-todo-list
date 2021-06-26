@@ -14,7 +14,7 @@ export const Request = async ({
   options,
 }: {
   path: string;
-  options: RequestInit;
+  options?: RequestInit;
 }) => {
   const response = await fetch(path, {
     ...defaultConfig,
