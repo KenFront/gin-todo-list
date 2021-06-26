@@ -18,8 +18,6 @@ buildApp:
 	docker build -t ${WEB_IMAGE}:${WEB_IMAGE_VERSION} ./app
 upDB:
 	docker compose up db migrate
-upBackend:
-	docker compose up db migrate server proxy
 upAll:
 	docker compose up
 down:

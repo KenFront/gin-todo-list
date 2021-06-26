@@ -83,8 +83,8 @@ make setDatabaseData
 # run first time or enviroment changed
 make setEnv
 
-# Launch all sever service except web
-make upBackend
+# Launch all sever service
+make upAll
 
 # To app root dictionary
 cd ./app
