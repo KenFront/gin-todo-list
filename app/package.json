@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.13",
@@ -24,6 +25,7 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^11.0.1",
     "@types/react": "17.0.11",
     "@types/react-virtualized": "^9.21.11",
     "@types/validator": "^13.1.4",
