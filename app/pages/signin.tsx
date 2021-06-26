@@ -54,7 +54,7 @@ function validatePassword() {
 const SignInPage = () => {
   const { changePath } = useChangePage();
   const { toastError } = useAppToast();
-  const { status, error, execute } = useAsync(signIn);
+  const signInAsync = useAsync(signIn);
   const [showPs, setShowPs] = useState(false);
   const toggleViewPs = () => setShowPs(!showPs);
   const { redirect } = useRedirectWithAuth();
@@ -66,15 +66,15 @@ const SignInPage = () => {
   };
 
   useEffect(() => {
-    if (status === "success") {
+    if (signInAsync.status === "success") {
       redirect();
     }
-  }, [status, redirect]);
+  }, [signInAsync, redirect]);
 
   useEffect(() => {
-    if (status === "error" && error) {
+    if (signInAsync.status === "error") {
       RequestErrorHandler({
-        e: error,
+        e: signInAsync.error,
         callback: (str) =>
           toastError({
             title: "Success",
@@ -82,7 +82,7 @@ const SignInPage = () => {
           }),
       });
     }
-  }, [status, error, toastError]);
+  }, [signInAsync, toastError]);
 
   return (
     <FullPage>
@@ -92,7 +92,7 @@ const SignInPage = () => {
           <Formik
             initialValues={{ account: "", password: "" }}
             onSubmit={(values) => {
-              execute(values);
+              signInAsync.execute(values);
             }}
           >
             {() => (
