@@ -127,7 +127,7 @@ const SignInPage = () => {
                         !!form.errors.password && form.touched.password
                       }
                     >
-                      <FormLabel htmlFor="password">Password</FormLabel>
+                      <FormLabel mt={4} htmlFor="password">Password</FormLabel>
                       <InputGroup size="md">
                         <Input
                           {...field}
