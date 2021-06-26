@@ -1,34 +1,66 @@
-import { Button } from "@chakra-ui/react";
+import { MouseEventHandler } from "react";
+import {
+  Wrap,
+  WrapItem,
+  LinkBox,
+  LinkOverlay,
+  Heading,
+} from "@chakra-ui/react";
 
 import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
+import { SignOutButton } from "@/auth/SignOutButton";
+
 import { FullPage } from "@/lib/component/FullPage";
 import { Header } from "@/lib/component/Header";
 import { Responsive } from "@/lib/component/Responsive";
-import { signOut } from "@/api/sign";
-import { useRedirectWithoutAuth } from "@/auth/useRedirectWithoutAuth";
+
+import { useChangePage } from "@/lib/hook/useChangePage";
+import { ROUTE } from "@/route";
 
 export const getServerSideProps = CheckPageWithAuth;
 
 const IndexPage = () => {
-  const { redirect } = useRedirectWithoutAuth();
+  const { changePath } = useChangePage();
+
+  const toTodoListPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
+    e.preventDefault();
+    changePath(ROUTE.TODOS);
+  };
+
   return (
     <FullPage>
-      <Header title="Index" />
+      <Header title="Index" rightArea={<SignOutButton />} />
       <Responsive>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          onClick={async () => {
-            try {
-              await signOut();
-              redirect();
-            } catch (e) {
-              console.error(e);
-            }
-          }}
-        >
-          Sign out
-        </Button>
+        <Wrap p={4} w="100%" spacing={4} justify="center">
+          <WrapItem>
+            <LinkBox
+              as="article"
+              maxW="sm"
+              p="4"
+              borderWidth="1px"
+              rounded="md"
+            >
+              <Heading size="md" my="2">
+                <LinkOverlay href={ROUTE.TODOS} onClick={toTodoListPage}>
+                  TodoList
+                </LinkOverlay>
+              </Heading>
+            </LinkBox>
+          </WrapItem>
+          <WrapItem>
+            <LinkBox
+              as="article"
+              maxW="sm"
+              p="4"
+              borderWidth="1px"
+              rounded="md"
+            >
+              <Heading size="md" my="2">
+                <LinkOverlay>Profile</LinkOverlay>
+              </Heading>
+            </LinkBox>
+          </WrapItem>
+        </Wrap>
       </Responsive>
     </FullPage>
   );

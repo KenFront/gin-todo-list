@@ -1,25 +1,37 @@
-import { Button, useColorMode, Heading } from "@chakra-ui/react";
+import { ReactNode } from "react";
+import {
+  HStack,
+  Button,
+  useColorMode,
+  Heading,
+  Spacer,
+} from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import styled from "@emotion/styled";
 
-const Container = styled.header`
-  height: 4.5rem;
-  width: 100%;
+const CutomHStack = styled(HStack)`
   box-shadow: var(--chakra-shadows-sm);
   padding: 0 var(--chakra-space-6);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 `;
 
-export const Header = ({ title }: { title: string }) => {
+export const Header = ({
+  title,
+  rightArea,
+}: {
+  title: string;
+  rightArea?: ReactNode;
+}) => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Container>
+    <CutomHStack w="100%" h="4.5rem">
       <Heading>{title}</Heading>
-      <Button onClick={toggleColorMode}>
-        {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-      </Button>
-    </Container>
+      <Spacer />
+      <HStack spacing={4}>
+        {rightArea}
+        <Button onClick={toggleColorMode}>
+          {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+        </Button>
+      </HStack>
+    </CutomHStack>
   );
 };
