@@ -9,10 +9,12 @@ import { Field, FormikState, FieldValidator } from "formik";
 
 export const TextInput = ({
   name,
+  label,
   placeholder = "",
   validate,
 }: {
   name: string;
+  label: string;
   placeholder?: string;
   validate: FieldValidator;
 }) => {
@@ -29,8 +31,11 @@ export const TextInput = ({
           }
         >;
       }) => (
-        <FormControl isInvalid={!!form.errors[name] && !!form.touched[name]}>
-          <FormLabel htmlFor={name}>Account</FormLabel>
+        <FormControl
+          mb={4}
+          isInvalid={!!form.errors[name] && !!form.touched[name]}
+        >
+          <FormLabel htmlFor={name}>{label}</FormLabel>
           <Input {...field} id={name} placeholder={placeholder} />
           <FormErrorMessage>{form.errors[name]}</FormErrorMessage>
         </FormControl>

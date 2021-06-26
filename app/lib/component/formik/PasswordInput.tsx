@@ -18,10 +18,12 @@ export const PasswordInput = <
   }
 >({
   name,
+  label,
   validate,
   placeholder = "",
 }: {
   name: string;
+  label: string;
   placeholder?: string;
   validate: FieldValidator;
 }) => {
@@ -30,10 +32,11 @@ export const PasswordInput = <
   return (
     <Field name={name} validate={validate}>
       {({ field, form }: { field: InputProps; form: FormikState<T> }) => (
-        <FormControl isInvalid={!!form.errors[name] && !!form.touched[name]}>
-          <FormLabel mt={4} htmlFor={name}>
-            Password
-          </FormLabel>
+        <FormControl
+          mb={4}
+          isInvalid={!!form.errors[name] && !!form.touched[name]}
+        >
+          <FormLabel htmlFor={name}>{label}</FormLabel>
           <InputGroup size="md">
             <Input
               {...field}

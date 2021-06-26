@@ -1,6 +1,5 @@
 import { MouseEventHandler, useEffect } from "react";
 import { Box, Button, Stack, Spacer, Link } from "@chakra-ui/react";
-
 import { Formik, Form } from "formik";
 
 import { CheckPageWithoutAuth } from "@/auth/CheckPageWithoutAuth";
@@ -22,6 +21,8 @@ import { validatePassword } from "@/validator/password";
 import { RequestErrorHandler } from "@/lib/request";
 import { signIn } from "@/api/sign";
 
+import { ROUTE } from "@/route";
+
 export const getServerSideProps = CheckPageWithoutAuth;
 
 const SignInPage = () => {
@@ -30,10 +31,9 @@ const SignInPage = () => {
   const signInAsync = useAsync(signIn);
   const { redirect } = useRedirectWithAuth();
 
-  const registerPath = "/register";
   const toRigisterPage: MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
-    changePath(registerPath);
+    changePath(ROUTE.REGISTER);
   };
 
   useEffect(() => {
@@ -48,10 +48,11 @@ const SignInPage = () => {
         e: signInAsync.error,
         callback: (str) =>
           toastError({
-            title: "Success",
+            title: "Error",
             description: str,
           }),
       });
+      signInAsync.reset()
     }
   }, [signInAsync, toastError]);
 
@@ -69,11 +70,13 @@ const SignInPage = () => {
             <Form>
               <TextInput
                 name="account"
+                label="Account"
                 validate={validateAccount}
                 placeholder="account"
               />
               <PasswordInput
                 name="password"
+                label="Password"
                 validate={validatePassword}
                 placeholder="password"
               />
@@ -89,7 +92,7 @@ const SignInPage = () => {
                   Submit
                 </Button>
                 <Spacer />
-                <Link href={registerPath} onClick={toRigisterPage}>
+                <Link href={ROUTE.REGISTER} onClick={toRigisterPage}>
                   Register
                 </Link>
               </Stack>
