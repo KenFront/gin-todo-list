@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 
-import { ROUTE } from "../route";
+import { ROUTE } from "@/route";
 
 export const CheckPageWithAuth: GetServerSideProps = async (ctx) => {
   const { cookies } = ctx.req;

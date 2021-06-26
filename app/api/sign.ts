@@ -1,5 +1,5 @@
-import { Request, PostOptions } from "../request";
-import { ApiOnSuccess } from "../request/type";
+import { Request, PostOptions } from "@/lib/request";
+import { ApiOnSuccess } from "@/lib/request/type";
 
 export const signIn = async (val: { account: string; password: string }) => {
   const res = await Request({

@@ -17,8 +17,8 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 import { Formik, Form, Field, FormikState } from "formik";
 
-import { CheckPageWithoutAuth } from "@/lib/auth/CheckPageWithoutAuth";
-import { signIn } from "@/lib/API/sign";
+import { CheckPageWithoutAuth } from "@/auth/CheckPageWithoutAuth";
+import { signIn } from "@/api/sign";
 import { RequestErrorHandler } from "@/lib/request";
 import { FullPage } from "@/lib/component/FullPage";
 import { Responsive } from "@/lib/component/Responsive";
@@ -26,7 +26,7 @@ import { Header } from "@/lib/component/Header";
 import { useAppToast } from "@/lib/hook/useAppToast";
 import { useAsync } from "@/lib/hook/useAsync";
 import { useChangePage } from "@/lib/hook/useChangePage";
-import { useRedirectWithAuth } from "@/lib/route/useRedirectWithAuth";
+import { useRedirectWithAuth } from "@/auth/useRedirectWithAuth";
 
 export const getServerSideProps = CheckPageWithoutAuth;
 

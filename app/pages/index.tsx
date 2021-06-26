@@ -1,11 +1,11 @@
 import { Button } from "@chakra-ui/react";
 
-import { CheckPageWithAuth } from "@/lib/auth/CheckPageWithAuth";
+import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
 import { FullPage } from "@/lib/component/FullPage";
 import { Header } from "@/lib/component/Header";
 import { Responsive } from "@/lib/component/Responsive";
-import { signOut } from "@/lib/API/sign";
-import { useRedirectWithoutAuth } from "@/lib/route/useRedirectWithoutAuth";
+import { signOut } from "@/api/sign";
+import { useRedirectWithoutAuth } from "@/auth/useRedirectWithoutAuth";
 
 export const getServerSideProps = CheckPageWithAuth;
 
