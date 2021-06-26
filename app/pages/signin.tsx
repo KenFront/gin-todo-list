@@ -44,7 +44,7 @@ function validatePassword() {
   return (value: string) => validateSignIn({ name: "password", value });
 }
 
-const IndexPage = () => {
+const SignInPage = () => {
   const { toastError } = useAppToast();
   const { status, error, execute } = useAsync(signIn);
   const [showPs, setShowPs] = useState(false);
@@ -142,4 +142,4 @@ const IndexPage = () => {
   );
 };
 
-export default IndexPage;
+export default SignInPage;
