@@ -122,13 +122,8 @@ make upAll
 
 ## Postman
 
-```bash
-# for make start
-domain=http://localhost
-
-# for make upAll
-domain=http://localhost/api
-```
+- Set Enviroments domain(http://localhost)
+- Edit Collection Add API Key(Key: X-Service, Value: gin_server, Add to: Header)
 
 ## Todolist
 

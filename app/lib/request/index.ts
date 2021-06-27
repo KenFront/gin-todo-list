@@ -1,28 +1,29 @@
-const defaultConfig: RequestInit = {
+export const DEFAULT_REQUEST_CONFIG: RequestInit = {
   cache: "no-cache",
   credentials: "same-origin",
   headers: {
     "content-type": "application/json",
+    "X-Service": "gin_server",
   },
   redirect: "follow",
   referrer: "no-referrer",
 };
-Object.freeze(defaultConfig);
+Object.freeze(DEFAULT_REQUEST_CONFIG);
 
 export type UnPromisify<T> = T extends Promise<infer U> ? U : T;
 
+export const CLIENT_REQUEST_PATH_PREFIX =
+  process.env.NODE_ENV === "production" ? "" : "/api";
+export const SERVER_REQUEST_PATH_PREFIX = `http://${process.env.DOMAIN}`;
 
-export const Request = async ({
+const request = async ({
   path,
   options,
 }: {
   path: string;
   options?: RequestInit;
 }) => {
-  const response = await fetch(path, {
-    ...defaultConfig,
-    ...options,
-  });
+  const response = await fetch(path, options);
 
   let jsonRes: unknown;
 
@@ -39,6 +40,31 @@ export const Request = async ({
   } else {
     throw jsonRes;
   }
+};
+
+export const ClientRequest = ({
+  path,
+  options,
+}: Parameters<typeof request>[0]) => {
+  return request({
+    path: `${CLIENT_REQUEST_PATH_PREFIX}${path}`,
+    options: { ...DEFAULT_REQUEST_CONFIG, ...options },
+  });
+};
+
+export const ServerRequest = ({
+  path,
+  options,
+}: Parameters<typeof request>[0]) => {
+  return request({
+    path: `${SERVER_REQUEST_PATH_PREFIX}${path}`,
+    options: {
+      headers: {
+        ...DEFAULT_REQUEST_CONFIG.headers,
+        ...options?.headers
+      }
+    },
+  });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

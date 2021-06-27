@@ -1,4 +1,4 @@
-import { Request, PostOptions } from "@/lib/request";
+import { ClientRequest, PostOptions } from "@/lib/request";
 import { ApiOnSuccess } from "@/lib/request/type";
 
 export const register = async (val: {
@@ -7,8 +7,8 @@ export const register = async (val: {
   password: string;
   email: string;
 }) => {
-  const res = await Request({
-    path: "/api/users",
+  const res = await ClientRequest({
+    path: "/users",
     options: PostOptions(val),
   });
 

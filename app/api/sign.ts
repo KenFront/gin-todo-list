@@ -1,9 +1,9 @@
-import { Request, PostOptions } from "@/lib/request";
+import { ClientRequest, PostOptions } from "@/lib/request";
 import { ApiOnSuccess } from "@/lib/request/type";
 
 export const signIn = async (val: { account: string; password: string }) => {
-  const res = await Request({
-    path: "/api/signin",
+  const res = await ClientRequest({
+    path: `/signin`,
     options: PostOptions(val),
   });
 
@@ -11,8 +11,8 @@ export const signIn = async (val: { account: string; password: string }) => {
 };
 
 export const signOut = async () => {
-  const res = await Request({
-    path: "/api/signout",
+  const res = await ClientRequest({
+    path: "/signout",
     options: PostOptions()
   });
 

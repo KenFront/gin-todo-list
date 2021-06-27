@@ -1,4 +1,4 @@
-import { Request, PostOptions } from "@/lib/request";
+import { ClientRequest, ServerRequest, PostOptions } from "@/lib/request";
 import { ApiOnSuccess } from "@/lib/request/type";
 
 export interface Todo {
@@ -12,8 +12,8 @@ export interface Todo {
 }
 
 export const addTodo = async (val: { title: string; description: string }) => {
-  const res = await Request({
-    path: "/api/todos",
+  const res = await ClientRequest({
+    path: "/todos",
     options: PostOptions(val),
   });
 
@@ -21,8 +21,8 @@ export const addTodo = async (val: { title: string; description: string }) => {
 };
 
 export const getTodos = async () => {
-  const res = await Request({
-    path: "/api/todos",
+  const res = await ClientRequest({
+    path: "/todos",
   });
 
   return res as ApiOnSuccess<Todo[]>;
@@ -35,8 +35,8 @@ export const getTodoByIdOnServerSide = async ({
   id: string;
   cookie: string;
 }) => {
-  const res = await Request({
-    path: `http://localhost/api/todos/${id}`,
+  const res = await ServerRequest({
+    path: `/todos/${id}`,
     options: {
       headers: {
         cookie,

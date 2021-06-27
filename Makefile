@@ -9,7 +9,7 @@ start:
 update:
 	go get -u ./...
 setEnv:
-	cp .env.example .env
+	cp .env.example .env && cp .env.example ./app/.env
 setDatabaseData:
 	mkdir ./db/data
 build:

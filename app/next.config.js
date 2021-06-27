@@ -6,6 +6,6 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 module.exports = withBundleAnalyzer({
   reactStrictMode: true,
   rewrites: () => [
-    { source: "/api/:path*", destination: "http://localhost/api/:path*" },
+    { source: "/api/:path*", destination: "http://localhost/:path*" },
   ],
 });
