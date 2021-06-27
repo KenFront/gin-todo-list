@@ -9,6 +9,9 @@ const defaultConfig: RequestInit = {
 };
 Object.freeze(defaultConfig);
 
+export type UnPromisify<T> = T extends Promise<infer U> ? U : T;
+
+
 export const Request = async ({
   path,
   options,
@@ -38,17 +41,13 @@ export const Request = async ({
   }
 };
 
-export const RequestErrorHandler = ({
-  e,
-  callback,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  e: any;
-  callback?: (e: string) => void;
-}) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const GetErrorHandler = (e: any): string => {
   if (e && e.error && typeof e.error === "string") {
     console.error(e);
-    callback && callback(e.error);
+    return e.error;
+  } else {
+    return "";
   }
 };
 

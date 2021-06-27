@@ -18,7 +18,7 @@ import { useChangePage } from "@/lib/hook/useChangePage";
 import { validateAccount } from "@/validator/account";
 import { validatePassword } from "@/validator/password";
 
-import { RequestErrorHandler } from "@/lib/request";
+import { GetErrorHandler } from "@/lib/request";
 import { signIn } from "@/api/sign";
 
 import { ROUTE } from "@/route";
@@ -37,23 +37,20 @@ const SignInPage = () => {
   };
 
   useEffect(() => {
-    if (result) {
+    if (status === "success" && result) {
       redirect();
     }
-  }, [result, redirect]);
+  }, [status, result, redirect]);
 
   useEffect(() => {
-    if (error) {
-      RequestErrorHandler({
-        e: error,
-        callback: (str) =>
-          toastError({
-            title: "Error",
-            description: str,
-          }),
+    if (status === "error" && error) {
+      const e = GetErrorHandler(error);
+      toastError({
+        title: "Error",
+        description: e,
       });
     }
-  }, [error, toastError]);
+  }, [status, error, toastError]);
 
   return (
     <FullPage>

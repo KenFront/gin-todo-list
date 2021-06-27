@@ -12,7 +12,7 @@ import { TextInput } from "@/lib/component/formik/TextInput";
 import { useAsync } from "@/lib/hook/useAsync";
 import { useAppToast } from "@/lib/hook/useAppToast";
 
-import { RequestErrorHandler } from "@/lib/request";
+import { GetErrorHandler } from "@/lib/request";
 import { addTodo } from "@/api/todo";
 
 import { isNotEmpty } from "@/validator/isNotEmpty";
@@ -24,26 +24,23 @@ const TodoAddPage = () => {
   const { toastSuccess, toastError } = useAppToast();
 
   useEffect(() => {
-    if (result) {
+    if (status === "success" && result) {
       toastSuccess({
         title: "Success",
         description: "Add todo successfully",
       });
     }
-  }, [result, toastSuccess]);
+  }, [status, result, toastSuccess]);
 
   useEffect(() => {
-    if (error) {
-      RequestErrorHandler({
-        e: error,
-        callback: (str) =>
-          toastError({
-            title: "Error",
-            description: str,
-          }),
+    if (status === "error" && error) {
+      const e = GetErrorHandler(error);
+      toastError({
+        title: "Error",
+        description: e,
       });
     }
-  }, [error, toastError]);
+  }, [status, error, toastError]);
 
   return (
     <FullPage>
@@ -52,7 +49,7 @@ const TodoAddPage = () => {
         <Box w="480px" p={4}>
           <Formik
             initialValues={{ title: "", description: "" }}
-            onSubmit={async(values, action) => {
+            onSubmit={async (values, action) => {
               await execute(values);
               action.resetForm();
             }}
@@ -73,10 +70,7 @@ const TodoAddPage = () => {
               <Stack mt={4} direction="row" spacing={4} align="center">
                 <Button
                   colorScheme="teal"
-                  isLoading={
-                    status === "loading" ||
-                    status === "success"
-                  }
+                  isLoading={status === "loading" || status === "success"}
                   type="submit"
                 >
                   Submit

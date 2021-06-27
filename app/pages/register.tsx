@@ -18,7 +18,7 @@ import { validateConfirmPassword } from "@/validator/confirmPassword";
 import { validateEmail } from "@/validator/email";
 import { isNotEmpty } from "@/validator/isNotEmpty";
 
-import { RequestErrorHandler } from "@/lib/request";
+import { GetErrorHandler } from "@/lib/request";
 import { register } from "@/api/user";
 
 import { ROUTE } from "@/route";
@@ -29,7 +29,7 @@ const IndexPage = () => {
   const { changePath } = useChangePage();
 
   useEffect(() => {
-    if (result) {
+    if (status === "success" && result) {
       toastSuccess({
         title: "Success",
         description: "Register successfully",
@@ -38,20 +38,17 @@ const IndexPage = () => {
         },
       });
     }
-  }, [result, changePath, toastSuccess]);
+  }, [status, result, changePath, toastSuccess]);
 
   useEffect(() => {
-    if (error) {
-      RequestErrorHandler({
-        e: error,
-        callback: (str) =>
-          toastError({
-            title: "Error",
-            description: str,
-          }),
+    if (status === "error" && error) {
+      const e = GetErrorHandler(error);
+      toastError({
+        title: "Error",
+        description: e,
       });
     }
-  }, [error, toastError]);
+  }, [status, error, toastError]);
 
   return (
     <FullPage>
