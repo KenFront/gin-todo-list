@@ -122,8 +122,13 @@ make upAll
 
 ## Postman
 
-- domain: http://localhost
-  For local testing
+```bash
+# for make start
+domain=http://localhost
+
+# for make upAll
+domain=http://localhost/api
+```
 
 ## Todolist
 
