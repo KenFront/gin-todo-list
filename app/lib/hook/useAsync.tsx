@@ -31,8 +31,8 @@ export const useAsync = <T, K extends Array<unknown>>(
       }
     } catch (error) {
       if (runningId === lastRunningId.current) {
-        setStatus("error");
         setError(error);
+        setStatus("error");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
