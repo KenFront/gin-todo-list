@@ -81,3 +81,7 @@ export const PostOptions = (body?: unknown): RequestInit => ({
   method: "post",
   body: body ? JSON.stringify(body) : null,
 });
+export const PatchOptions = (body?: unknown): RequestInit => ({
+  method: "PATCH",
+  body: body ? JSON.stringify(body) : null,
+});
