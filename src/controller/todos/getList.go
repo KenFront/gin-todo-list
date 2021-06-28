@@ -26,7 +26,7 @@ func GetList(p GetListProps) gin.HandlerFunc {
 			})
 		}
 
-		if err := p.Db.Find(&todos, "user_id = ?", userId).Error; err != nil {
+		if err := p.Db.Order("updated_at desc").Find(&todos, "user_id = ?", userId).Error; err != nil {
 			controller.ApiOnError(&model.ApiError{
 				StatusCode: http.StatusServiceUnavailable,
 				ErrorType:  model.ERROR_GET_TODOS_FAILED,
