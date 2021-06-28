@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, FC } from "react";
 import { GetServerSideProps } from "next";
 import { Heading, Box, Button, Stack } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { Formik, Form, useFormikContext } from "formik";
 import { format } from "date-fns";
 
 import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
@@ -17,7 +17,7 @@ import { SignOutButton } from "@/auth/SignOutButton";
 import { useAsync } from "@/lib/hook/useAsync";
 import { useAppToast } from "@/lib/hook/useAppToast";
 
-import { getTodoByIdOnServerSide, patchTodoById } from "@/api/todo";
+import { getTodoByIdOnServerSide, patchTodoById, Todo } from "@/api/todo";
 import { GetErrorHandler, UnPromisify } from "@/lib/request";
 
 import { isNotEmpty } from "@/validator/isNotEmpty";
@@ -52,6 +52,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {},
   };
+};
+
+const UpdateInitValues: FC<{ todo: Todo }> = ({ todo }) => {
+  const { resetForm } = useFormikContext();
+
+  useEffect(() => {
+    if (todo) {
+      resetForm({
+        values: {
+          title: todo.title,
+          description: todo.description,
+          createdAt: format(new Date(todo.createdAt), "yyyy-MM-dd HH:mm:ss z"),
+          updatedAt: format(new Date(todo.updatedAt), "yyyy-MM-dd HH:mm:ss z"),
+          isCompleted: todo.status === "completed",
+        },
+      });
+    }
+  }, [resetForm, todo]);
+  return null;
 };
 
 const TodoDetailPage = ({
@@ -108,8 +127,8 @@ const TodoDetailPage = ({
               updatedAt: format(new Date(updatedAt), "yyyy-MM-dd HH:mm:ss z"),
               isCompleted: status === "completed",
             }}
-            onSubmit={(values) => {
-              execute({
+            onSubmit={async (values) => {
+              await execute({
                 id,
                 title: values.title,
                 description: values.description,
@@ -131,7 +150,7 @@ const TodoDetailPage = ({
                 placeholder="description"
               />
               <Text name="createdAt" label="CreatedAt" />
-              <Text name="updatedAt" label="CpdatedAt" />
+              <Text name="updatedAt" label="UpdatedAt" />
               <Switch name="isCompleted" label="Status" />
               <Stack mt={4} direction="row" spacing={4} align="center">
                 <Button
@@ -142,6 +161,9 @@ const TodoDetailPage = ({
                   Submit
                 </Button>
               </Stack>
+              {apiStatus === "success" && result && (
+                <UpdateInitValues todo={result.data} />
+              )}
             </Form>
           </Formik>
         </Box>
