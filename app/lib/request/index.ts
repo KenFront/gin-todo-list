@@ -78,7 +78,7 @@ export const GetErrorHandler = (e: any): string => {
 };
 
 export const PostOptions = (body?: unknown): RequestInit => ({
-  method: "post",
+  method: "POST",
   body: body ? JSON.stringify(body) : null,
 });
 export const PatchOptions = (body?: unknown): RequestInit => ({
