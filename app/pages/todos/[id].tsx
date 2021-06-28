@@ -2,7 +2,6 @@ import { useEffect, FC } from "react";
 import { GetServerSideProps } from "next";
 import { Box, Button, Stack } from "@chakra-ui/react";
 import { Formik, Form, useFormikContext } from "formik";
-import { format } from "date-fns";
 
 import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
 
@@ -17,6 +16,8 @@ import { ErrorPage } from "@/lib/component/ErrorPage";
 
 import { useAsync } from "@/lib/hook/useAsync";
 import { useAppToast } from "@/lib/hook/useAppToast";
+
+import { getFormatedTime } from "@/lib/time/format";
 
 import { getTodoByIdOnServerSide, patchTodoById, Todo } from "@/api/todo";
 import { GetErrorHandler, UnPromisify } from "@/lib/request";
@@ -64,8 +65,8 @@ const UpdateInitValues: FC<{ todo: Todo }> = ({ todo }) => {
         values: {
           title: todo.title,
           description: todo.description,
-          createdAt: format(new Date(todo.createdAt), "yyyy-MM-dd HH:mm:ss z"),
-          updatedAt: format(new Date(todo.updatedAt), "yyyy-MM-dd HH:mm:ss z"),
+          createdAt: getFormatedTime(todo.createdAt),
+          updatedAt: getFormatedTime(todo.updatedAt),
           isCompleted: todo.status === "completed",
         },
       });
@@ -119,8 +120,8 @@ const TodoDetailPage = ({
             initialValues={{
               title,
               description,
-              createdAt: format(new Date(createdAt), "yyyy-MM-dd HH:mm:ss z"),
-              updatedAt: format(new Date(updatedAt), "yyyy-MM-dd HH:mm:ss z"),
+              createdAt: getFormatedTime(createdAt),
+              updatedAt: getFormatedTime(updatedAt),
               isCompleted: status === "completed",
             }}
             onSubmit={(values) => {

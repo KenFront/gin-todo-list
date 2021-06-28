@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { Table, Column } from "react-virtualized";
 import { Checkbox, HStack, Button, Stack, Skeleton } from "@chakra-ui/react";
-import { format } from "date-fns";
 import { EditIcon } from "@chakra-ui/icons";
 
 import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
@@ -12,6 +11,8 @@ import { Responsive } from "@/lib/component/Responsive";
 
 import { useAsync } from "@/lib/hook/useAsync";
 import { useChangePage } from "@/lib/hook/useChangePage";
+
+import { getFormatedTime } from "@/lib/time/format";
 
 import { getTodos } from "@/api/todo";
 
@@ -81,7 +82,7 @@ const TodolistPage = () => {
               dataKey="createdAt"
               cellRenderer={({ cellData }) => (
                 <span>
-                  {format(new Date(cellData), "yyyy-MM-dd HH:mm:ss z")}
+                  {getFormatedTime(cellData)}
                 </span>
               )}
             />
@@ -91,7 +92,7 @@ const TodolistPage = () => {
               dataKey="updatedAt"
               cellRenderer={({ cellData }) => (
                 <span>
-                  {format(new Date(cellData), "yyyy-MM-dd HH:mm:ss z")}
+                  {getFormatedTime(cellData)}
                 </span>
               )}
             />
