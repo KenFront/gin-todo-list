@@ -123,8 +123,8 @@ const TodoDetailPage = ({
               updatedAt: format(new Date(updatedAt), "yyyy-MM-dd HH:mm:ss z"),
               isCompleted: status === "completed",
             }}
-            onSubmit={async (values) => {
-              await execute({
+            onSubmit={(values) => {
+              execute({
                 id,
                 title: values.title,
                 description: values.description,
