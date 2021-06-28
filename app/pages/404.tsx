@@ -1,18 +1,7 @@
-import { Heading } from "@chakra-ui/react";
+import { ErrorPage } from "@/lib/component/ErrorPage";
 
-import { FullPage } from "@/lib/component/FullPage";
-import { Responsive } from "@/lib/component/Responsive";
-import { Header } from "@/lib/component/Header";
-
-const ErrorPage = () => {
-  return (
-    <FullPage>
-      <Header title="Error" />
-      <Responsive align="center" justify="center">
-        <Heading size="lg">Page not found</Heading>
-      </Responsive>
-    </FullPage>
-  );
+const NotFoundPage = () => {
+  return <ErrorPage title="Error" msg="Page not found" />;
 };
 
-export default ErrorPage;
+export default NotFoundPage;

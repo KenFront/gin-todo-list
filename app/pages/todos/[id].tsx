@@ -1,6 +1,6 @@
 import { useEffect, FC } from "react";
 import { GetServerSideProps } from "next";
-import { Heading, Box, Button, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack } from "@chakra-ui/react";
 import { Formik, Form, useFormikContext } from "formik";
 import { format } from "date-fns";
 
@@ -13,6 +13,7 @@ import { EditableText } from "@/lib/component/formik/EditableText";
 import { Text } from "@/lib/component/formik/Text";
 import { Switch } from "@/lib/component/formik/Switch";
 import { SignOutButton } from "@/auth/SignOutButton";
+import { ErrorPage } from "@/lib/component/ErrorPage";
 
 import { useAsync } from "@/lib/hook/useAsync";
 import { useAppToast } from "@/lib/hook/useAppToast";
@@ -103,12 +104,7 @@ const TodoDetailPage = ({
   const e = GetErrorHandler(res);
   if (e) {
     return (
-      <FullPage>
-        <Header title="Todo Detail" />
-        <Responsive align="center" justify="center">
-          <Heading size="lg">Error: {e}</Heading>
-        </Responsive>
-      </FullPage>
+      <ErrorPage title="Todo Detail" rightArea={<SignOutButton />} msg={e} />
     );
   }
 

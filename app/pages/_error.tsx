@@ -1,9 +1,6 @@
 import { GetServerSideProps } from "next";
-import { Heading } from "@chakra-ui/react";
 
-import { FullPage } from "@/lib/component/FullPage";
-import { Responsive } from "@/lib/component/Responsive";
-import { Header } from "@/lib/component/Header";
+import { ErrorPage } from "@/lib/component/ErrorPage";
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   return {
@@ -17,20 +14,14 @@ const ErrorMsg = (code: number) => {
   switch (true) {
     case code >= 500:
       return "Server is not working now";
+    default:
     case code >= 400:
       return "Something wrong";
   }
 };
 
-const ErrorPage = ({ statusCode }: { statusCode: number }) => {
-  return (
-    <FullPage>
-      <Header title="Error" />
-      <Responsive align="center" justify="center">
-        <Heading size="lg">{ErrorMsg(statusCode)}</Heading>
-      </Responsive>
-    </FullPage>
-  );
+const DefaultErrorPage = ({ statusCode }: { statusCode: number }) => {
+  return <ErrorPage title="Error" msg={ErrorMsg(statusCode)} />;
 };
 
-export default ErrorPage;
+export default DefaultErrorPage;
