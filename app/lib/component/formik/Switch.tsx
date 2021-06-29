@@ -4,7 +4,7 @@ import {
   Switch as ChakraSwitch,
   InputProps,
 } from "@chakra-ui/react";
-import { Field, FormikState } from "formik";
+import { Field } from "formik";
 
 export const Switch = ({ name, label }: { name: string; label: string }) => {
   return (
