@@ -10,7 +10,7 @@ update:
 	go get -u ./...
 setEnv:
 	cp .env.example .env
-setDatabaseData:
+setDbPath:
 	mkdir ./db/data
 build:
 	docker build -t ${SERVER_IMAGE}:${SERVER_IMAGE_VERSION} .

@@ -29,7 +29,7 @@ make update
 make setEnv
 
 # Set database data volume path
-make setDatabaseData
+make setDbPath
 
 # Build go server image
 make build
@@ -65,7 +65,7 @@ make generateFlowChart FLOW_CHART=servers
 
 ```bash
 # run first time
-make setDatabaseData
+make setDbPath
 
 # run first time or enviroment changed
 make setEnv
@@ -81,7 +81,7 @@ make start
 
 ```bash
 # run first time
-make setDatabaseData
+make setDbPath
 
 # run first time or enviroment changed
 make setEnv
@@ -105,7 +105,7 @@ npm run dev
 
 ```bash
 # run first time
-make setDatabaseData
+make setDbPath
 
 # run first time or enviroment changed
 make setEnv
