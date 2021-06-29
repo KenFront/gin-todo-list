@@ -1,20 +1,23 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Table, Column } from "react-virtualized";
 import { Checkbox, HStack, Button, Stack, Skeleton } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import { CheckPageWithAuth } from "@/auth/CheckPageWithAuth";
 import { SignOutButton } from "@/auth/SignOutButton";
 import { FullPage } from "@/lib/component/FullPage";
 import { Header } from "@/lib/component/Header";
 import { Responsive } from "@/lib/component/Responsive";
+import { DeleteModal } from "@/lib/component/DeleteModal";
 
 import { useAsync } from "@/lib/hook/useAsync";
 import { useChangePage } from "@/lib/hook/useChangePage";
+import { useAppToast } from "@/lib/hook/useAppToast";
 
 import { getFormatedTime } from "@/lib/time/format";
 
-import { getTodos } from "@/api/todo";
+import { GetErrorHandler } from "@/lib/request";
+import { getTodos, deleteTodoById } from "@/api/todo";
 
 import { ROUTE } from "@/route";
 
@@ -22,7 +25,9 @@ export const getServerSideProps = CheckPageWithAuth;
 
 const TodolistPage = () => {
   const { execute, result } = useAsync(getTodos);
+  const [deleteId, setDeleteId] = useState("");
   const { changePath } = useChangePage();
+  const { toastSuccess, toastError } = useAppToast();
 
   const toTodoAddPage = () => {
     changePath({ path: ROUTE.TODO_ADD });
@@ -32,7 +37,7 @@ const TodolistPage = () => {
     changePath({ path: ROUTE.TODO_DETAIL, param: { id } });
   };
 
-  const colW = useMemo(() => [100, 200, 100, 250, 250], []);
+  const colW = useMemo(() => [100, 200, 100, 250, 250, 80], []);
   const colSum = colW.reduce((sum, num) => sum + num);
 
   useEffect(() => {
@@ -81,9 +86,7 @@ const TodolistPage = () => {
               label="CreatedAt"
               dataKey="createdAt"
               cellRenderer={({ cellData }) => (
-                <span>
-                  {getFormatedTime(cellData)}
-                </span>
+                <span>{getFormatedTime(cellData)}</span>
               )}
             />
             <Column
@@ -91,9 +94,23 @@ const TodolistPage = () => {
               label="UpdatedAt"
               dataKey="updatedAt"
               cellRenderer={({ cellData }) => (
-                <span>
-                  {getFormatedTime(cellData)}
-                </span>
+                <span>{getFormatedTime(cellData)}</span>
+              )}
+            />
+            <Column
+              width={colW[5]}
+              label="Action"
+              dataKey="id"
+              cellRenderer={({ cellData }) => (
+                <Button
+                  colorScheme="red"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteId(cellData);
+                  }}
+                >
+                  <DeleteIcon />
+                </Button>
               )}
             />
           </Table>
@@ -105,6 +122,36 @@ const TodolistPage = () => {
           </Stack>
         )}
       </Responsive>
+      <DeleteModal
+        isOpen={!!deleteId}
+        title="Delete todo"
+        description={`Are you sure to delete ${
+          result?.data.find((item) => item.id === deleteId)?.title || "it"
+        }?`}
+        confirmText="Ok"
+        cancelText="cancel"
+        onConfirm={async () => {
+          try {
+            const res = await deleteTodoById({ id: deleteId });
+            toastSuccess({
+              title: "Success",
+              description: `Delete ${res.data.title} successfully`,
+            });
+            setDeleteId("");
+          } catch (e) {
+            const msg = GetErrorHandler(e);
+            toastError({
+              title: "Error",
+              description: msg,
+            });
+          } finally {
+            execute();
+          }
+        }}
+        onCancel={async () => {
+          setDeleteId("");
+        }}
+      />
     </FullPage>
   );
 };

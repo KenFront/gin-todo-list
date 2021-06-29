@@ -81,7 +81,13 @@ export const PostOptions = (body?: unknown): RequestInit => ({
   method: "POST",
   body: body ? JSON.stringify(body) : null,
 });
+
 export const PatchOptions = (body?: unknown): RequestInit => ({
   method: "PATCH",
+  body: body ? JSON.stringify(body) : null,
+});
+
+export const DeleteOptions = (body?: unknown): RequestInit => ({
+  method: "DELETE",
   body: body ? JSON.stringify(body) : null,
 });

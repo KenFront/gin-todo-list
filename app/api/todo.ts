@@ -1,4 +1,10 @@
-import { ClientRequest, ServerRequest, PostOptions, PatchOptions } from "@/lib/request";
+import {
+  ClientRequest,
+  ServerRequest,
+  PostOptions,
+  PatchOptions,
+  DeleteOptions,
+} from "@/lib/request";
 import { ApiOnSuccess } from "@/lib/request/type";
 
 export interface Todo {
@@ -56,6 +62,15 @@ export const patchTodoById = async ({
   const res = await ClientRequest({
     path: `/todos/${id}`,
     options: PatchOptions(payload),
+  });
+
+  return res as ApiOnSuccess<Todo>;
+};
+
+export const deleteTodoById = async ({ id }: { id: string }) => {
+  const res = await ClientRequest({
+    path: `/todos/${id}`,
+    options: DeleteOptions(),
   });
 
   return res as ApiOnSuccess<Todo>;
