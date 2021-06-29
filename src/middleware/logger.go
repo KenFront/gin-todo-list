@@ -55,7 +55,6 @@ func hideSecurityPayload(val string) interface{} {
 	securities := `"(password|account)":\s*".*?"`
 	re := regexp.MustCompile(securities)
 	result := re.ReplaceAllString(val, `"$1": "******"`)
-	fmt.Println(val)
 
 	var data interface{}
 	if err := json.Unmarshal([]byte(result), &data); err != nil {
