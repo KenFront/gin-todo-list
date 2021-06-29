@@ -128,6 +128,7 @@ make upAll
 ## Todolist
 
 - UI(React)
+- i18n
 - https setting
 - Cron
 - System log(MongoDb)
