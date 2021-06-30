@@ -51,9 +51,10 @@ func getPrettyLog(log logBase) string {
 	return result
 }
 
+var securities = `"(password|account)":\s*".*?"`
+var re = regexp.MustCompile(securities)
+
 func hideSecurityPayload(val string) interface{} {
-	securities := `"(password|account)":\s*".*?"`
-	re := regexp.MustCompile(securities)
 	result := re.ReplaceAllString(val, `"$1": "******"`)
 
 	var data interface{}
