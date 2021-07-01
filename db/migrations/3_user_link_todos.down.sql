@@ -1,1 +1,2 @@
-ALTER TABLE todos DROP COLUMN IF EXISTS user_id;
+ALTER TABLE
+    todos DROP COLUMN IF EXISTS user_id;
