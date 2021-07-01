@@ -36,12 +36,12 @@ func SetAuth(c *gin.Context, userId string) error {
 		return err
 	}
 	env := config.GetEnv()
-	c.SetCookie(authKey, token, getAuthDuration(), "/", env.DOMAIN, env.DOMAIN != "http://localhost", true)
+	c.SetCookie(authKey, token, getAuthDuration(), "/", env.DOMAIN, env.DOMAIN != "localhost", true)
 	return nil
 }
 
 func DeleteAuth(c *gin.Context) {
 	env := config.GetEnv()
 
-	c.SetCookie(authKey, "DELETED", -1, "/", env.DOMAIN, env.DOMAIN != "http://localhost", true)
+	c.SetCookie(authKey, "DELETED", -1, "/", env.DOMAIN, env.DOMAIN != "localhost", true)
 }
