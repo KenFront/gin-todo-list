@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "mikestead.dotenv",
+    "golang.go",
+    "hangxingliu.vscode-nginx-conf-hint",
+    "adpyke.vscode-sql-formatter"
+  ]
+}
