@@ -24,23 +24,23 @@ const TodoAddPage = () => {
   const { toastSuccess, toastError } = useAppToast();
 
   useEffect(() => {
-    if (status === "success" && result) {
+    if (result) {
       toastSuccess({
         title: "Success",
         description: "Add todo successfully",
       });
     }
-  }, [status, result, toastSuccess]);
+  }, [result, toastSuccess]);
 
   useEffect(() => {
-    if (status === "error" && error) {
+    if (error) {
       const e = GetErrorHandler(error);
       toastError({
         title: "Error",
         description: e,
       });
     }
-  }, [status, error, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
@@ -70,7 +70,7 @@ const TodoAddPage = () => {
               <Stack mt={4} direction="row" spacing={4} align="center">
                 <Button
                   colorScheme="teal"
-                  isLoading={status === "loading" || status === "success"}
+                  isLoading={status === "loading"}
                   type="submit"
                 >
                   Submit

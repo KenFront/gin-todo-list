@@ -84,23 +84,23 @@ const TodoDetailPage = ({
   const { toastSuccess, toastError } = useAppToast();
 
   useEffect(() => {
-    if (apiStatus === "success" && result) {
+    if (result) {
       toastSuccess({
         title: "Success",
         description: "Update todo successfully",
       });
     }
-  }, [apiStatus, result, toastSuccess]);
+  }, [result, toastSuccess]);
 
   useEffect(() => {
-    if (apiStatus === "error" && error) {
+    if (error) {
       const e = GetErrorHandler(error);
       toastError({
         title: "Error",
         description: e,
       });
     }
-  }, [apiStatus, error, toastError]);
+  }, [error, toastError]);
 
   const e = GetErrorHandler(res);
   if (e) {
@@ -158,7 +158,7 @@ const TodoDetailPage = ({
                   Submit
                 </Button>
               </Stack>
-              {apiStatus === "success" && result && (
+              {result && (
                 <UpdateInitValues todo={result.data} />
               )}
             </Form>

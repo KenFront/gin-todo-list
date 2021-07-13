@@ -29,7 +29,7 @@ const IndexPage = () => {
   const { changePath } = useChangePage();
 
   useEffect(() => {
-    if (status === "success" && result) {
+    if (result) {
       toastSuccess({
         title: "Success",
         description: "Register successfully",
@@ -41,14 +41,14 @@ const IndexPage = () => {
   }, [status, result, changePath, toastSuccess]);
 
   useEffect(() => {
-    if (status === "error" && error) {
+    if (error) {
       const e = GetErrorHandler(error);
       toastError({
         title: "Error",
         description: e,
       });
     }
-  }, [status, error, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
@@ -63,13 +63,14 @@ const IndexPage = () => {
               confirmPassword: "",
               email: "",
             }}
-            onSubmit={(values) => {
-              execute({
+            onSubmit={async (values, action) => {
+              await execute({
                 name: values.name,
                 account: values.account,
                 password: values.password,
                 email: values.email,
               });
+              action.resetForm();
             }}
           >
             {(props) => (
@@ -113,7 +114,7 @@ const IndexPage = () => {
                 >
                   <Button
                     colorScheme="teal"
-                    isLoading={status === "loading" || status === "success"}
+                    isLoading={status === "loading"}
                     type="submit"
                   >
                     Submit

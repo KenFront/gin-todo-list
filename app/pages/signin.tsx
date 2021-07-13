@@ -1,4 +1,4 @@
-import { MouseEventHandler, useEffect } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { Box, Button, Stack, Spacer, Link } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 
@@ -37,20 +37,20 @@ const SignInPage = () => {
   };
 
   useEffect(() => {
-    if (status === "success" && result) {
+    if (result) {
       redirect();
     }
-  }, [status, result, redirect]);
+  }, [result, redirect]);
 
   useEffect(() => {
-    if (status === "error" && error) {
+    if (error) {
       const e = GetErrorHandler(error);
       toastError({
         title: "Error",
         description: e,
       });
     }
-  }, [status, error, toastError]);
+  }, [error, toastError]);
 
   return (
     <FullPage>
