@@ -48,7 +48,7 @@ export const useAsync = <T, K extends Array<unknown>>(
         setResult({
           status: 'error',
           success: undefined,
-          error: error
+          error: error as Error
         })
       }
     }

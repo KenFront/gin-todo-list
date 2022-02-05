@@ -10,28 +10,29 @@
     "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.13",
-    "@chakra-ui/react": "^1.6.4",
-    "@emotion/react": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
-    "date-fns": "^2.22.1",
+    "@chakra-ui/icons": "^1.1.1",
+    "@chakra-ui/react": "^1.8.1",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "date-fns": "^2.28.0",
     "formik": "^2.2.9",
-    "framer-motion": "^4.1.17",
-    "next": "11.0.1",
+    "framer-motion": "^5.6.0",
+    "next": "12.0.10",
     "path-to-regexp": "^6.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-virtualized": "^9.22.3",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^11.0.1",
-    "@types/react": "17.0.11",
-    "@types/react-virtualized": "^9.21.11",
-    "@types/validator": "^13.1.4",
-    "@typescript-eslint/eslint-plugin": "^4.28.0",
-    "eslint": "7.29.0",
-    "eslint-config-next": "11.0.1",
-    "typescript": "4.3.4"
+    "@next/bundle-analyzer": "^12.0.10",
+    "@types/node": "^17.0.15",
+    "@types/react": "17.0.39",
+    "@types/react-virtualized": "^9.21.16",
+    "@types/validator": "^13.7.1",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "eslint": "8.8.0",
+    "eslint-config-next": "12.0.10",
+    "typescript": "4.5.5"
   }
 }
