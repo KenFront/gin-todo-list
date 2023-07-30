@@ -27,6 +27,6 @@ test:
 testAll:
 	go clean -testcache && $(TEST_COMMAND)
 lint:
-	golangci-lint run ./src/...
+	golangci-lint run ./src/... --timeout=10m
 generateFlowChart:
 	docker run --rm -v ${PWD}/flowChart:/home/node/data matthewfeickert/mermaid-cli:latest -i $(FLOW_CHART).mmd -o $(FLOW_CHART).svg
