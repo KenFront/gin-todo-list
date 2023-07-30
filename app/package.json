@@ -10,29 +10,29 @@
     "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.0.18",
-    "@chakra-ui/react": "^2.5.5",
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "date-fns": "^2.28.0",
-    "formik": "^2.2.9",
-    "framer-motion": "^10.12.2",
-    "next": "^13.3.0",
-    "path-to-regexp": "^6.2.0",
+    "@chakra-ui/icons": "^2.1.0",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "date-fns": "^2.30.0",
+    "formik": "^2.4.2",
+    "framer-motion": "^10.15.0",
+    "next": "^13.4.12",
+    "path-to-regexp": "^6.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-virtualized": "^9.22.3",
-    "validator": "^13.7.0"
+    "react-virtualized": "^9.22.5",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^13.3.0",
-    "@types/node": "^18.15.11",
-    "@types/react": "^18.0.35",
-    "@types/react-virtualized": "^9.21.16",
-    "@types/validator": "^13.7.1",
-    "@typescript-eslint/eslint-plugin": "^5.10.2",
-    "eslint": "^8.38.0",
-    "eslint-config-next": "^13.3.0",
-    "typescript": "^5.0.4"
+    "@next/bundle-analyzer": "^13.4.12",
+    "@types/node": "^20.4.5",
+    "@types/react": "^18.2.17",
+    "@types/react-virtualized": "^9.21.22",
+    "@types/validator": "^13.7.17",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "eslint": "^8.46.0",
+    "eslint-config-next": "^13.4.12",
+    "typescript": "^5.1.6"
   }
 }
