@@ -10,27 +10,27 @@ jobs:
   lint-test-build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache go module
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-v2-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-v3-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-v2
+            ${{ runner.os }}-go-v3
 
       - name: Set up Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v3
         with:
           go-version: 1.16.x
 
       - name: Lint
-        uses: golangci/golangci-lint-action@v2
+        uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.40.1
+          version: v1.53.3
 
       - name: Test
         run: make testAll
